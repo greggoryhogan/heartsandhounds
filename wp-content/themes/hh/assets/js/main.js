@@ -4,7 +4,7 @@
     var origOffsetY = menu.offset().top;
     
     function scroll() {
-        if ($(window).scrollTop() >= 20) {
+        if ($(window).scrollTop() >= 30) {
             $('body').addClass('nav-is-sticky');
             
         } else {

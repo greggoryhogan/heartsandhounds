@@ -38,6 +38,9 @@
       transition: .2s max-width;
       display: block;
       margin: 0 auto;
+      @media (max-width: 992px) {
+        max-width: 96px;
+      }
     }
   }
   .menu {
@@ -65,11 +68,15 @@
 }
 #main {
   @media (min-width: 992px) {
-    padding-top: 240px;
+    padding-top: 180px;
   }
   @media (max-width: 992px) {
-    padding-top: 120px;
+    padding-top: 80px;
   }
+  @media (max-width: 768px) {
+    padding-top: 70px;
+  }
+  
 }
 body {
   @media (min-width: 992px) {
@@ -84,7 +91,7 @@ body {
         }
       }
       #main {
-        padding-top: 240px;
+        padding-top: 180px;
       }
     }
   }
