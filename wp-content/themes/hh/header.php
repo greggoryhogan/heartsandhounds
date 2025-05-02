@@ -8,7 +8,7 @@
 <header class="site-header">
     <div class="container">
         <div class="row">
-			<div class="col-md-6 col-10 logo-container">
+			<div class="col-md-6 col-12 logo-container">
                 <a href="/" title="Home" class="home-link text-reset text-decoration-none position-relative d-flex align-items-center">
                     <img src="<?php echo THEME_URI; ?>/assets/img/pup-cropped.png" class="" alt="Beacon Hill Financial Educators Logo"/>
                     <h1>Hearts<span>&amp; Hounds</span></h1>
@@ -24,7 +24,7 @@
                     </button>
                 </div>
             </div>-->
-			<div class="col-md-6 col-2 site-navigation"><?php hh_wp_nav_menu(); ?></div>
+			<div class="col-md-6 col-12 site-navigation"><?php hh_wp_nav_menu(); ?></div>
 		</div>
     </div>
     <nav class="d-mobile">
