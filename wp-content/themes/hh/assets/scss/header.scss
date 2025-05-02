@@ -1,7 +1,15 @@
 @import "variables";
 .site-header {
-  background: $red;
-  border-bottom: 4px solid $dark-brown;
+  //background: $red;
+  //border-bottom: 4px solid $dark-brown;
+  position:fixed;
+    top:0;
+    width: 100%;
+  top: 0;
+  @media (max-width: 992px) {
+    background: $white;
+    padding-top: 0!important;
+  }
   .home-link {
     img {
       width: 8.5rem;
@@ -24,18 +32,59 @@
       }
     }
   }
-  .site-navigation {
-    ul {
+  .logo {
+    img {
+      max-width: 100%;
+      transition: .2s max-width;
+      display: block;
+      margin: 0 auto;
+    }
+  }
+  .menu {
+    @media (min-width: 992px) {
       height: 100%;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      font-family: 'TargetBook';
-      
-      a {
-        color: $dark-brown;
-        font-size: 1.2rem;
-        text-decoration: none;
+    }
+    @media (max-width: 992px) {
+      & + .menu {
+        margin-left: 20px; 
+      }
+    }
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: 'TargetBook';
+    a {
+      color: $dark-brown;
+      font-size: 1.2rem;
+      text-decoration: none;
+      &:hover {
+        color: $red;
+      }
+    }
+  }
+}
+#main {
+  @media (min-width: 992px) {
+    padding-top: 240px;
+  }
+  @media (max-width: 992px) {
+    padding-top: 120px;
+  }
+}
+body {
+  @media (min-width: 992px) {
+    &.nav-is-sticky {
+      .site-header {
+        background: $white;
+        padding-top: 0!important;
+        .logo {
+          img {
+            max-width: 125px;
+          }
+        }
+      }
+      #main {
+        padding-top: 240px;
       }
     }
   }

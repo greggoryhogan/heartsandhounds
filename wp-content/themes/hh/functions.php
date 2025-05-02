@@ -15,6 +15,7 @@ function register_hh_scripts() {
 	$hh_dir = hh_URL.'/wp-content/themes/hh';
 	//Main Stylesheet
 	wp_enqueue_style( 'hh-main', $hh_dir.'/assets/css/main.css', false, $version, 'all' );
+	wp_enqueue_script( 'hh-main', $hh_dir.'/assets/js/main.js', array('jquery'), $version, true);
 	
 }
 add_action( 'wp_enqueue_scripts', 'register_hh_scripts' );
@@ -37,16 +38,17 @@ function hh_early_head_customization() {
 }
 
 add_theme_support( 'title-tag','menus', 'editor-color-palette' );
-register_nav_menu( 'main-menu',		__( 'Main Menu', 'hh' ) );
+register_nav_menu( 'menu-left',		__( 'Main Menu Left', 'hh' ) );
+register_nav_menu( 'menu-right',  __( 'Main Menu Right', 'hh' ) );
 register_nav_menu( 'footer-menu',	__( 'Footer Menu', 'hh' ) );
 
 /* ---------------------------------------------------------------------------
  * Main Menu
  * --------------------------------------------------------------------------- */
-function hh_wp_nav_menu( $location = 'main-menu', $depth = 4 ) {	
+function hh_wp_nav_menu( $location = 'main-menu', $depth = 4, $extra_class = '' ) {	
 	$args = array( 
 		'container' 		=> 'false',
-		'menu_class'		=> 'menu d-flex align-items-center justify-content-end', 
+		'menu_class'		=> 'menu d-flex align-items-center '.$extra_class, 
 		'theme_location'	=> $location,
 		'depth' 			=> $depth,
 		'echo' 				=> false,
