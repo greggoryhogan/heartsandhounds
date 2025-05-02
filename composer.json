@@ -1,0 +1,10 @@
+{
+    "require": {
+        "phpseclib/phpseclib": "3.0.*",
+        "mailchimp/marketing": "*",
+        "mpdf/mpdf": "^8.1"
+    },
+    "config": {
+        "platform-check": false
+    }
+}

@@ -1,0 +1,42 @@
+@import "variables";
+body {
+    background: $bg-light;
+    color: $dark-brown;
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'TargetBook';
+    text-transform: uppercase;
+}
+//Override container widths
+@media (min-width: 576px) { /* Small */
+  .container-sm {
+    max-width: 540px; /* or any custom value you need */
+  }
+}
+
+@media (min-width: 768px) { /* Medium */
+  .container-md {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 992px) { /* Large */
+  .container-lg {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1200px) { /* Extra large */
+  .container-xl {
+    max-width: 1240px; /* Updated to 1440px */
+  }
+}
+
+@media (min-width: 1400px) { /* Extra extra large */
+  .container-xxl {
+    max-width: 1420px; /* Slight increase to maintain balance */
+  }
+}
