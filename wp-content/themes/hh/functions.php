@@ -1,6 +1,6 @@
 <?php
 
-define('hh_URL',get_bloginfo('url'));
+define('HH_URL',get_bloginfo('url'));
 define( 'THEME_DIR', get_template_directory() );
 define( 'THEME_URI', get_template_directory_uri() );
 
@@ -12,11 +12,11 @@ function register_hh_scripts() {
 	//Theme version
 	$version = wp_get_theme()->get('Version');
 	//Deliver minified css for staging/prod
-	$hh_dir = hh_URL.'/wp-content/themes/hh';
+	$hh_dir = HH_URL.'/wp-content/themes/hh';
 	//Main Stylesheet
 	wp_enqueue_style( 'hh-main', $hh_dir.'/assets/css/main.css', false, $version, 'all' );
 	wp_enqueue_script( 'hh-main', $hh_dir.'/assets/js/main.js', array('jquery'), $version, true);
-	
+	wp_enqueue_script( 'henry-bootstrap', HH_URL.'/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js', array(), '5.2', true );
 }
 add_action( 'wp_enqueue_scripts', 'register_hh_scripts' );
 

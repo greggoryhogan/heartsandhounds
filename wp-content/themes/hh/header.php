@@ -9,44 +9,31 @@
     <div class="container">
         <div class="row">
             <div class="col-md-5 d-none d-lg-block">
-                <?php hh_wp_nav_menu('menu-left', 2, 'justify-content-end'); ?>
+                <?php hh_wp_nav_menu('menu-left', 2, 'justify-content-end menu-left'); ?>
             </div>
-            <div class="col-lg-2 col-md-2 col-3">
+            <div class="col-lg-2 col-3">
                 <a href="/" title="Home" class="logo" title="Visit Hearts & Hounds homepage">
                     <img src="<?php echo THEME_URI; ?>/assets/img/logo-circle.png" alt="Hearts & Hounds logo"/>
                 </a>
             </div>
             <div class="col-md-5  d-none d-lg-block">
-                <?php hh_wp_nav_menu('menu-right'); ?>
+                <?php hh_wp_nav_menu('menu-right',2,'menu-right'); ?>
             </div>
-            <div class="col-8 d-flex d-lg-none">
-                <?php hh_wp_nav_menu('menu-left', 2, 'd-inline-block'); ?>
-                <?php hh_wp_nav_menu('menu-right', 2, 'd-inline-block'); ?>
+            <div class="col-9 col-lg-10 d-flex d-lg-none align-items-center justify-content-end">
+                <input type="checkbox" id="menu" />
+                <label for="menu" class="hamburger" data-bs-toggle="collapse" href="#mobile-nav" role="button" aria-expanded="false" aria-controls="mobile-nav">
+                    <div></div>
+                </label>
             </div>
-			<!--<div class="col-md-6 col-12 logo-container">
-                <a href="/" title="Home" class="home-link text-reset text-decoration-none position-relative d-flex align-items-center">
-                    <img src="<?php echo THEME_URI; ?>/assets/img/pup-cropped.png" class="" alt="Beacon Hill Financial Educators Logo"/>
-                    <h1>Hearts<span>&amp; Hounds</span></h1>
-                </a>
-            </div>-->
-            <!--<div class="col-sm-6 col-md-7 col-lg-7 col-4 d-mobile"></div>
-            <div class="col-2 d-mobile">
-                <div class="mobile-nav">
-                    <button class="nav-toggle">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
-                </div>
-            </div>-->
-			
 		</div>
     </div>
-    <nav class="d-mobile">
-        <div class="container">
-            <?php //hh_wp_nav_menu(); ?>
+    <div class="collapse container" id="mobile-nav">
+        <div class="d-flex flex-column d-lg-none">
+            <?php hh_wp_nav_menu('menu-left', 2, 'd-flex flex-column'); ?>
+            <?php hh_wp_nav_menu('menu-right', 2, 'd-flex flex-column'); ?>
         </div>
-    </nav>
+    </div>
+    
 </header>
 <main role="main" id="main">
     
