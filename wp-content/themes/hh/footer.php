@@ -9,8 +9,8 @@
             </div>
             <div class="col-md-12 col-12">
                 <div class="d-flex flex-md-row flex-column align-items-center nav-container justify-content-center">
-                    <?php hh_wp_nav_menu('menu-left', 2, 'd-inline-block'); ?>
-                    <?php hh_wp_nav_menu('menu-right', 2, 'd-inline-block'); ?>
+                    <?php hh_wp_nav_menu('menu-left', 2, 'd-flex flex-sm-row flex-column'); ?>
+                    <?php hh_wp_nav_menu('menu-right', 2, 'd-flex flex-sm-row flex-column'); ?>
                 </div>
             </div>
         </div>

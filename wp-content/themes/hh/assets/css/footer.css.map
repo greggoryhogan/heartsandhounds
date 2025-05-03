@@ -1,1 +1,1 @@
-{"version":3,"sourceRoot":"","sources":[],"names":[],"mappings":"","file":"footer.css"}
+{"version":3,"sourceRoot":"","sources":["../scss/footer.scss","../scss/variables.scss"],"names":[],"mappings":"AACA,QACI,WCGE,QDFF,MCGI,KDFJ,UACI,MCCA,0BDCA,gBACI,MCPC,QDUT,YACI,cAEJ,uBACI,YACA,SAEJ,WACI,SACA,UACA,gBACA,SAEJ,wBACI,WCnBA,KDoBA","file":"footer.css"}
