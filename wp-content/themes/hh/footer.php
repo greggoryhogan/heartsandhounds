@@ -14,6 +14,9 @@
                 </div>
             </div>
         </div>
+        <div class="text-center mt-2">
+            <a href="mailto:outreach@heartsandhounds.org" title="email us">outreach@heartsandhounds.org</a>
+        </div>
     </div>
 </footer>
 <?php wp_footer(); ?>
