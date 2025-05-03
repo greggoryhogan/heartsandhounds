@@ -6,31 +6,10 @@
     top:0;
     width: 100%;
   top: 0;
+  z-index: 99;
   @media (max-width: 992px) {
     background: $white;
     padding-top: 0!important;
-  }
-  .home-link {
-    img {
-      width: 8.5rem;
-      height: auto;
-    }
-    h1 {
-      color: $dark-brown;
-      //text-shadow: 5px 5px rgba(250,219,175, .5);
-      margin: 0 0 0 1rem;
-      line-height: 2.1rem;
-      transition: .2s color;
-      span {
-        display: block;
-      }
-    }
-    &:hover {
-      h1 {
-        color: $light-brown;
-        //text-shadow: -0 0 rgba(250,219,175, 1);
-      }
-    }
   }
   .logo {
     img {
@@ -79,6 +58,17 @@
         }
       }
     }
+    .highlight {
+      a {
+        background: $red;
+        color: $white;
+        border-radius: 5px;
+        padding: 5px 8px;
+        &:hover {
+          background: $dark-brown;
+        }
+      }
+    }
   }
 
   #mobile-nav {
@@ -101,6 +91,9 @@
         padding-left: 5px;
         a {
           font-size: 1.4rem;
+        }
+        &.highlight {
+          margin: 10px 0;
         }
       }
     }
@@ -221,6 +214,14 @@
   
 }
 body {
+  &.admin-bar {
+    .site-header {
+      margin-top: 32px;
+      @media screen and (max-width: 782px) {
+        margin-top: 46px !important;
+      }
+    }
+  }
   @media (min-width: 992px) {
     &.nav-is-sticky {
       .site-header {
@@ -234,5 +235,26 @@ body {
       }
       
     }
+  }
+}
+
+
+.treat-text {
+  font-size: 7vw;
+  line-height: 6vw;
+  @media (max-width: 768px) {
+    font-size: 60px;
+    line-height: 55px;
+  }
+  span {
+    color: $red;
+  }
+}
+.bone-container {
+  @media(max-width: 768px) {
+    //transform: rotate(21deg);
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 }

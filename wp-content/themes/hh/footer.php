@@ -13,6 +13,9 @@
                     <?php hh_wp_nav_menu('menu-right', 2, 'd-flex flex-sm-row flex-column'); ?>
                 </div>
             </div>
+            <div class="mt-2 d-flex flex-md-row flex-column align-items-center nav-container justify-content-center">
+                <?php hh_wp_nav_menu('footer-menu', 2, 'd-flex flex-sm-row flex-column'); ?>
+            </div>
         </div>
         <div class="text-center mt-2">
             <a href="mailto:outreach@heartsandhounds.org?subject=I want to help!" title="email us">outreach@heartsandhounds.org</a>
