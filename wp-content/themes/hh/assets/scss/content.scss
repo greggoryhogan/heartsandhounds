@@ -67,6 +67,16 @@
     .woocommerce-form-login .woocommerce-form-login__rememberme {
       display: block!important;
     }
+    div.product form.cart .variations select {
+      background: $white!important;
+      border: none!important;
+    }
+    div.product form.cart div.quantity {
+      float: none!important;
+    }
+    .product-meta {
+      display: none!important;
+    }
   }
 }
 .select2-container .select2-dropdown, .select2-container .select2-selection {

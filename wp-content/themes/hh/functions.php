@@ -191,3 +191,5 @@ if (!function_exists('loop_columns')) {
 		return 3; // 3 products per row
 	}
 }
+
+remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40 );
