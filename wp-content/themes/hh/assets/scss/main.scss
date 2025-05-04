@@ -1,6 +1,8 @@
 //@import "../../../../../node_modules/bootstrap-icons/font/bootstrap-icons.scss";
 @import "variables";
 
+$border-color: $dark-brown;
+
 // Required Bootstrap imports
 @import "../../../../../node_modules/bootstrap/scss/functions";
 @import "../../../../../node_modules/bootstrap/scss/variables";
@@ -24,3 +26,4 @@
 @import 'global';
 @import 'header';
 @import 'footer';
+@import 'content';

@@ -1,0 +1,80 @@
+@import "variables";
+#main {
+  min-height: 67.55vh;
+  a {
+    color: $red;
+    &:hover {
+      color: $dark-brown;
+    }
+  }
+  .woocommerce,
+  .woocommerce-page {
+    .woocommerce-MyAccount-navigation {
+      background: #fff;
+      padding: 15px;
+      border-radius: 15px;
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        a {
+          text-decoration: none;
+          padding: 5px 0;
+          display: block;
+        }
+      }
+      
+    }
+    form .form-row .input-text, .woocommerce form .form-row select,
+    .select2-container .select2-dropdown, .select2-container .select2-selection
+     {
+      border-color: $white!important;
+    }
+    .addresses .title .edit {
+      float: none!important;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+    .woocommerce-error, .woocommerce-info, .woocommerce-message {
+      border-top-color: $red!important;
+      &:before {
+        color: $dark-brown!important;
+      }
+    }
+    .wp-block-separator.is-style-dots,
+    .woocommerce-result-count,
+    .woocommerce-ordering,
+    .woocommerce-tabs {
+      display: none!important;
+    }
+    /*.wc-block-grid__product-image {
+      img {
+        border-radius: 50%;
+      }
+    }*/
+    @media (max-width: 576px) {
+      ul.products[class*="columns-"] li.product, .woocommerce-page ul.products[class*="columns-"] li.product {
+        width: 100%!important;
+      }
+    }
+    form.checkout_coupon,
+    form.login,
+    form.register {
+      padding: 0!important;
+      border: none!important;
+      margin: 0 0 2em 0!important;
+    }
+    .woocommerce-form-login .woocommerce-form-login__rememberme {
+      display: block!important;
+    }
+  }
+}
+.select2-container .select2-dropdown, .select2-container .select2-selection {
+  border-color: $white!important;
+}
+.wp-block-woocommerce-cart .wp-block-product-new {
+  margin-top: 30px;
+  .wc-block-grid__product-add-to-cart {
+    display: none!important;
+  } 
+}

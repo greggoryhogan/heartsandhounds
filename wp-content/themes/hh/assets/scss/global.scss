@@ -44,3 +44,11 @@ img {
   max-width: 100%;
   height: auto;
 }
+.button {
+  background: $dark-brown!important;
+  color: $white!important;
+  margin-top: 12px!important;
+  &:hover {
+    background: $red!important;
+  }
+}
