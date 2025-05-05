@@ -341,8 +341,8 @@ add_filter( 'comment_form_fields', 'hearts_and_hounds_custom_comment_form_order'
 
 function hearts_and_hounds_comment_form_notes( $defaults ) {
     $defaults['comment_notes_before'] = '<p class="comment-notes">Have a treat box story to share? Share any stories, feedback, or a wagging tail moment from your visit. Your thoughts make a difference!</p>';
-    $defaults['comment_notes_after'] = ''; // Remove from below the textarea
-
+    $defaults['comment_notes_after'] = '<small class="d-block"><span class="required">*</span> Required</small>'; // Remove from below the textarea
+	$defaults['comment_notes_after'] = '';
     return $defaults;
 }
 add_filter( 'comment_form_defaults', 'hearts_and_hounds_comment_form_notes' );
@@ -350,7 +350,7 @@ add_filter( 'comment_form_defaults', 'hearts_and_hounds_comment_form_notes' );
 function hearts_and_hounds_comment_field_descriptions( $fields ) {
     if ( isset( $fields['author'] ) ) {
         $fields['author'] = '<p class="comment-form-author">
-            <label for="author">Name</label>
+            <label for="author">Name <span class="required">*</span></label>
             <input id="author" name="author" type="text" required />
             <small class="form-text text-muted">Please enter your first name or nickname.</small>
         </p>';
@@ -358,7 +358,7 @@ function hearts_and_hounds_comment_field_descriptions( $fields ) {
 
     if ( isset( $fields['email'] ) ) {
         $fields['email'] = '<p class="comment-form-email">
-            <label for="email">Email</label>
+            <label for="email">Email <span class="required">*</span></label>
             <input id="email" name="email" type="email" required />
             <small class="form-text text-muted">Your email won&rsquo;t be shown publicly.</small>
         </p>';
