@@ -302,3 +302,13 @@ function remove_comment_author_link($author_link) {
     return get_comment_author();  // This returns just the author's name without the link
 }
 add_filter('get_comment_author_link', 'remove_comment_author_link');
+
+
+add_filter('comment_form_default_fields', 'website_remove');
+function website_remove($fields)
+{
+   if(isset($fields['url']))
+   unset($fields['url']);
+   return $fields;
+}
+remove_action( 'set_comment_cookies', 'wp_set_comment_cookies' );

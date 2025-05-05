@@ -164,5 +164,19 @@ input[type="submit"] {
     textarea {
       border: 1px solid $brown;
     }
+    .comment-form-email,
+    .comment-form-author {
+      label {
+        display: block;
+        width: 100%;
+      }
+      input {
+        display: block;
+        width: 100%;
+        border-radius: 5px;
+        border: 1px solid $dark-brown;
+        padding: 5px;
+      }
+    }
   }
 }
