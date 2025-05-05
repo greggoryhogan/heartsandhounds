@@ -25,7 +25,7 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (min-width: 992px) { /* Large */
   .container-lg {
-    max-width: 960px;
+    max-width: 1110px;
   }
 }
 
@@ -45,7 +45,8 @@ img {
   height: auto;
 }
 .button,
-.add-shelter {
+.add-shelter,
+input[type="submit"] {
   background: $dark-brown!important;
   color: $white!important;
   margin-top: 12px!important;
@@ -76,4 +77,92 @@ img {
   float: right;
   margin: 0 0 10px 0;
   cursor: pointer;
+}
+#wp-link-wrap {
+  height: 280px !important;
+  margin-top: -140px !important;
+  label {
+    display: block!important;
+  }
+  #wp-link .link-target label {
+    max-width: 100%;
+  }
+  #wplink-link-existing-content {
+    display: none!important;
+  }
+}
+
+.comments-section {
+  .commentlist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .comment {
+    border-left: 1.5px solid rgba(0,0,0,.1);
+    padding-left: 15px;
+    margin: 10px 0 20px 0;
+    .comment-author {
+      font-weight: bold;
+     
+    }
+    .comment-meta {
+      display: none;
+    }
+    .children {
+      list-style: none;
+      padding: 0;
+    }
+  }
+  #comments {
+    margin-bottom: 18px;
+  }
+  .comment-body {
+    display: grid;
+    grid-template-columns: 1fr;
+    .comment-author {
+      grid-row: 2;
+      cite {
+        font-style: normal;
+      }
+      &:before {
+        //content: '-';
+      }
+      .says {
+        display: none;
+      }
+    }
+    p {
+      grid-row: 1;
+      margin-bottom: 0;
+    }
+    .reply {
+      grid-row: 3;
+    }
+  }
+  .comment-notes {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+  }
+  
+  .comment-form-comment textarea {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  #reply-title {
+    margin-top: 8px;
+    small {
+      display: block;
+      font-size: 1rem;
+      margin-top: 5px;
+    }
+  }
+  #respond {
+    textarea {
+      border: 1px solid $brown;
+    }
+  }
 }

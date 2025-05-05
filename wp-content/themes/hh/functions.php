@@ -16,9 +16,18 @@ function register_hh_scripts() {
 	//Main Stylesheet
 	wp_enqueue_style( 'hh-main', $hh_dir.'/assets/css/main.css', false, $version, 'all' );
 	wp_enqueue_script( 'hh-main', $hh_dir.'/assets/js/main.js', array('jquery'), $version, true);
+	/*wp_localize_script( 'hh-main', 'hh_main', array(
+		'current_user_id' => get_current_user_id()
+	) );*/
 	wp_enqueue_script( 'henry-bootstrap', HH_URL.'/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js', array(), '5.2', true );
 	if ( is_account_page() ) {
         wp_enqueue_editor();
+    }
+	if (is_singular('post')) {
+        // Enqueue the default comment scripts
+        if (comments_open() || get_comments_number()) {
+            wp_enqueue_script('comment-reply');  // This is the WordPress script for handling comment replies
+        }
     }
 }
 add_action( 'wp_enqueue_scripts', 'register_hh_scripts' );
@@ -165,6 +174,13 @@ function hh_loginlogo_url($url) {
 function menu_set_dropdown( $menu_items, $args ) {
     $last_top = 0;
     foreach ( $menu_items as $key => $obj ) {
+		if(isset($obj->classes)) {
+			if(in_array('my-account', $obj->classes)) {
+				if(get_current_user_id() > 0) {
+					$obj->title = 'My Account';
+				}
+			}
+		}
         // it is a top lv item?
         if ( 0 == $obj->menu_item_parent ) {
             // set the key of the parent
@@ -222,3 +238,67 @@ function wp_engine_manual_cache_flush() {
 
 	return $error;
 }
+
+add_filter('wp_link_query_args', 'disable_link_searching');
+function disable_link_searching($args) {
+	if ( is_admin() && wp_doing_ajax() ) {
+		$args['post_type'] = false;
+	}
+	return $args;
+}
+add_filter('gettext', 'translate_text', 10);
+add_filter('ngettext', 'translate_text');
+function translate_text($translated_text) {
+	if($translated_text == 'Paste URL or type to search') {
+		$translated_text = 'Enter a url';
+	} 
+	if ( $translated_text === 'One response to %s' ) {
+        return 'One tail wag about %s';
+    }
+	if ( $translated_text === '%1$s responses to %2$s' ) {
+        return '%1$s tail wags about %2$s';
+    }
+	if ( $translated_text === '%1$s response to %2$s' ) {
+        return '%1$s tail wag %2$s';
+    }
+	return $translated_text;
+}
+
+add_action('wp_login', function ($user_login, $user) {
+    //Set a login timestamp so we can query users who have never logged in
+    update_user_meta($user->ID, 'last_login', current_time('mysql'));
+}, 10, 2);
+
+//keep non-admins out
+add_action('admin_init', function () {
+    // Only run on actual admin pages (not AJAX or admin-ajax.php)
+    if (!defined('DOING_AJAX') || !DOING_AJAX) {
+        if (!current_user_can('administrator')) {
+            wp_redirect(home_url('/my-account/'));
+            exit;
+        }
+    }
+});
+//hide toolbar
+add_filter('show_admin_bar', function ($show) {
+    return current_user_can('administrator');
+});
+
+function custom_comment_form_defaults($defaults) {
+    $defaults['title_reply'] = 'Share Your Thoughts or Treat Box Stories';  // Change the comment box title
+    $defaults['comment_notes_after'] = '<p class="comment-notes">Have a treat box story to share? Share any stories, feedback, or a wagging tail moment from your visit. Your thoughts make a difference!</p>';  // Add custom text below the comment form
+    return $defaults;
+}
+add_filter('comment_form_defaults', 'custom_comment_form_defaults');
+
+function remove_comment_avatars($args) {
+    $args['avatar_size'] = 0;  // Set avatar size to 0 to prevent avatars from being displayed
+    return $args;
+}
+add_filter('comment_form_defaults', 'remove_comment_avatars');  // Removes avatars in the comment form
+add_filter('get_avatar', '__return_false');  // Disables avatars everywhere in comments
+
+function remove_comment_author_link($author_link) {
+    return get_comment_author();  // This returns just the author's name without the link
+}
+add_filter('get_comment_author_link', 'remove_comment_author_link');

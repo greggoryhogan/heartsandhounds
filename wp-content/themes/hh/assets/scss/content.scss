@@ -1,8 +1,10 @@
 @import "variables";
 #main {
   min-height: 67.55vh;
-  a {
+  a,
+  .display-link {
     color: $red;
+    cursor: pointer;
     &:hover {
       color: $dark-brown;
     }
@@ -149,10 +151,19 @@
 }
 .box-details {
   position: relative;
-  @media (min-width: 768px) {
-    .box-info {
+  
+  .box-info {
+    
+    @media (min-width: 768px) {
       position: sticky;
       top: 190px;
     }
+    @media (max-width: 992px) {
+      top: 160px;
+    }
   }
+}
+
+.ui-helper-hidden-accessible {
+  display: none!important;
 }
