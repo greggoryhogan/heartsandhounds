@@ -32,6 +32,14 @@ function register_hh_scripts() {
 }
 add_action( 'wp_enqueue_scripts', 'register_hh_scripts' );
 
+function theme_specific_login_style() {
+	$version = wp_get_theme()->get('Version');
+	//Deliver minified css for staging/prod
+	$hh_dir = HH_URL.'/wp-content/themes/hh';
+	wp_enqueue_style( 'hh-main', $hh_dir.'/assets/css/login.css', false, $version, 'all' );
+}
+add_action( 'login_enqueue_scripts', 'theme_specific_login_style' ); 
+
 add_action('wp_head','hh_early_head_customization',5);
 function hh_early_head_customization() { 
 	?>
