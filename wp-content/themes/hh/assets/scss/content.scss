@@ -147,3 +147,12 @@
     //float: none!important;
   }
 }
+.box-details {
+  position: relative;
+  @media (min-width: 768px) {
+    .box-info {
+      position: sticky;
+      top: 180px;
+    }
+  }
+}
