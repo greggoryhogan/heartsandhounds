@@ -6,6 +6,10 @@ body {
     font-optical-sizing: auto;
     font-style: normal;
 }
+.bg-brown {
+  background: #c97c36;
+  color: #fff;
+}
 h1, h2, h3, h4, h5, h6 {
     font-family: 'TargetBook';
     text-transform: uppercase;
@@ -72,6 +76,15 @@ input[type="submit"],
   text-shadow: none;
   &:hover {
     background: $red!important;
+  }
+  &.button-large {
+    padding: 1.5em 2em;
+  }
+  &.button-red {
+    background: $red!important;
+    &:hover {
+      background: $dark-brown!important;
+    }
   }
 }
 .remove-shelter {
@@ -180,18 +193,4 @@ input[type="submit"],
       }
     }
   }
-}
-
-.wc-blocks-components-select .wc-blocks-components-select__select,
-.wc-block-components-form .wc-block-components-text-input input[type="email"], .wc-block-components-form .wc-block-components-text-input input[type="number"], .wc-block-components-form .wc-block-components-text-input input[type="password"], .wc-block-components-form .wc-block-components-text-input input[type="tel"], .wc-block-components-form .wc-block-components-text-input input[type="text"], .wc-block-components-form .wc-block-components-text-input input[type="url"], .wc-block-components-text-input input[type="email"], .wc-block-components-text-input input[type="number"], .wc-block-components-text-input input[type="password"], .wc-block-components-text-input input[type="tel"], .wc-block-components-text-input input[type="text"], .wc-block-components-text-input input[type="url"] {
-  border: none!important;
-}
-
-.wc-block-components-radio-control--highlight-checked .wc-block-components-radio-control-accordion-option--checked-option-highlighted, .wc-block-components-radio-control--highlight-checked label.wc-block-components-radio-control__option--checked-option-highlighted {
-  box-shadow: none!important;
-  border: 1px solid $dark-brown!important;
-}
-.wc-block-store-notice {
-  background: #fff!important;
-  border: none!important;
 }

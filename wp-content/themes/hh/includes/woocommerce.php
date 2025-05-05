@@ -585,3 +585,13 @@ add_filter("woocommerce_get_query_vars", function ($vars) {
     return $vars;
 
 });
+
+add_action('wp_ajax_get_cart_total', 'get_cart_total');
+add_action('wp_ajax_nopriv_get_cart_total', 'get_cart_total');
+function get_cart_total() {
+    $cart_count = '';
+    if ( class_exists( 'woocommerce' ) ) {
+        $cart_count = is_object( WC()->cart ) ? WC()->cart->get_cart_contents_count() : '';
+    }
+    wp_send_json(array('cart_count' => $cart_count));
+}

@@ -54,6 +54,51 @@
             $('#save-box').trigger('click');
         } 
     });
-    
+
+    var cart_count = parseInt($('.site-header .hh-cart a').attr('data-cart-count'));
+    if(cart_count > 0) {
+      $('.site-header .hh-cart a').append('<span class="cart-count">'+cart_count+'</span>');
+    }
+    function updateCartCount() {
+      let cartTotal;
+      $.ajax({
+          url: hh_main.ajax_url,
+          method: 'GET',
+          async: false,
+          data: {
+              action: 'get_cart_total',
+          },
+          success: (response) => {
+              cartTotal = response.cart_count;
+              if(cartTotal == 0 || cartTotal == '') {
+                $('.site-header .hh-cart a .cart-count').remove();
+              } else {
+                if($('.site-header .hh-cart a .cart-count').length) {
+                  $('.site-header .hh-cart a .cart-count').text(cartTotal);
+                } else {
+                  $('.site-header .hh-cart a').append('<span class="cart-count">'+cartTotal+'</span>');
+                }
+              }
+              
+          },
+          error: (response)=>{
+      
+          }
+      });
+  }
+
+  wp.hooks.addAction(
+    'experimental__woocommerce_blocks-cart-set-item-quantity',
+    'test',
+    ( { product, quantity } ) => {
+      const key = product.key;
+      const unsubscribe = wp.data.subscribe(() => {
+              const isPendingQuantity = wp.data.select('wc/store/cart').isItemPendingQuantity(key);
+              if ( ! isPendingQuantity ) {
+                  updateCartCount();
+              }
+          }, 'wc/store/cart');
+    }
+  );
 
 })(jQuery); // Fully reference jQuery after this point.

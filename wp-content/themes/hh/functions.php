@@ -16,9 +16,10 @@ function register_hh_scripts() {
 	//Main Stylesheet
 	wp_enqueue_style( 'hh-main', $hh_dir.'/assets/css/main.css', false, $version, 'all' );
 	wp_enqueue_script( 'hh-main', $hh_dir.'/assets/js/main.js', array('jquery'), $version, true);
-	/*wp_localize_script( 'hh-main', 'hh_main', array(
+	wp_localize_script( 'hh-main', 'hh_main', array(
+		'ajax_url' => admin_url( 'admin-ajax.php' ),
 		'current_user_id' => get_current_user_id()
-	) );*/
+	) );
 	wp_enqueue_script( 'henry-bootstrap', HH_URL.'/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js', array(), '5.2', true );
 	if ( is_account_page() ) {
         wp_enqueue_editor();
@@ -103,7 +104,7 @@ function my_item_setup($item) {
     return $item;
 }
 
-//add_filter( 'nav_menu_link_attributes','add_woo_data_to_link', 10, 3 );
+add_filter( 'nav_menu_link_attributes','add_woo_data_to_link', 10, 3 );
 function add_woo_data_to_link($atts, $item, $args) {
 	if(is_array($item->classes)) {
 		if(in_array('hh-cart', $item->classes)) {

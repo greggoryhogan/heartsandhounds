@@ -40,6 +40,31 @@
         color: $red;
       }
     }
+    li {
+      &.hh-cart {
+        a {
+        display: flex;
+          .cart-count {
+            font-family: "Montserrat",sans-serif;
+            aspect-ratio: 1/1;
+            background: #f24d5b;
+            color: #fff;
+            margin-left: 6px;
+            width: 20px;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: .6em;
+            align-self: flex-end;
+            margin-bottom: 4px;
+            font-weight: bold;
+          }
+        }
+
+      }
+    }
     &.menu-left {
       li {
         a {
