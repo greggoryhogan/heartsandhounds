@@ -338,7 +338,10 @@ function display_edit_box_form($box_id) {
     
     if ( $box_id ) {
         $box = get_post( $box_id );
-        echo '<div class="mb-2">Visit: <a href="'.get_permalink($box_id).'" title="View your box">'.get_permalink($box_id).'</a></div>';
+        $permalink = get_permalink($box_id);
+        $link = str_replace(trailingslashit(get_bloginfo('url')), 'https://hhbox.org/', $permalink);
+        $text = str_replace('https://','',$link);
+        echo '<div class="mb-2">Visit: <a href="'.$link.'" title="View your box">'.$text.'</a></div>';
         // Check if the box exists and is authored by the current user
         if ( $box && $box->post_author == $user_id ) {
             // Get current post meta for the box
