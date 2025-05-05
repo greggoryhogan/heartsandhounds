@@ -188,3 +188,37 @@ if(!function_exists('is_staging')) {
 		return false;
 	}
 }
+
+function wp_engine_manual_cache_flush() {
+	// Don't cause a fatal if there is no WpeCommon class
+	if ( ! class_exists( 'WpeCommon' ) ) {
+		return 'This is not a WP Engine environment. ';
+	}
+
+	if ( method_exists('WpeCommon', 'purge_memcached' ) ) {
+		\WpeCommon::purge_memcached();
+	}
+
+	if ( method_exists('WpeCommon', 'clear_maxcdn_cache' ) ) {
+		\WpeCommon::clear_maxcdn_cache();
+	}
+
+	if ( method_exists('WpeCommon', 'purge_varnish_cache' ) ) {
+		\WpeCommon::purge_varnish_cache();
+	}
+	
+	global $wp_object_cache;
+	// Check for valid cache. Sometimes this is broken -- we don't know why! -- and it crashes when we flush.
+	// If there's no cache, we don't need to flush anyway.
+	$error = ' WP Engine caches cleared.';
+
+	if ( $wp_object_cache && is_object( $wp_object_cache ) ) {
+		try {
+			wp_cache_flush();
+		} catch ( \Exception $ex ) {
+			$error = "Warning: error flushing WordPress object cache: " . $ex->getMessage();
+		}
+	}
+
+	return $error;
+}

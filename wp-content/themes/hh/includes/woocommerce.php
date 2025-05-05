@@ -475,6 +475,9 @@ function handle_edit_box_submission() {
             update_post_meta( $box_id, 'location', $location );
             update_post_meta( $box_id, 'shelters', $shelters );
 
+            //attempt to clear cache
+            wp_engine_manual_cache_flush();
+            
             // Display success message
             wc_add_notice( 'Your box has been updated!', 'success' );
             if(!empty($errors)) {
