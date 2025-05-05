@@ -318,7 +318,7 @@ function list_user_boxes() {
         }
         echo '</ul>';
     } else {
-        echo 'You have not created any boxes yet.';
+        echo '<p>You have not created any boxes yet.</p>';
     }
 
     // Reset Post Data
