@@ -10,13 +10,27 @@
   .woocommerce,
   .woocommerce-page {
     .woocommerce-MyAccount-navigation {
-      background: #fff;
-      padding: 15px;
-      border-radius: 15px;
+      @media (max-width: 768px) {
+        display: none;
+      }
+      @media (min-width: 768px) {
+        background: #fff;
+        padding: 15px;
+        border-radius: 15px;
+      }
       ul {
         list-style: none;
         padding: 0;
         margin: 0;
+        @media (max-width: 768px) {
+          display: flex;
+          gap: 0 16px;
+          flex-wrap: wrap;
+          flex-direction: column;
+          margin-bottom: 1.5rem;
+          border-bottom: 1px solid $dark-brown;
+          padding-bottom: 1.5rem;
+        }
         a {
           text-decoration: none;
           padding: 5px 0;
@@ -30,6 +44,27 @@
         }
       }
       
+    }
+    .woo-account-select-wrapper {
+      @media (min-width: 768px) {
+        display: none;
+      }
+      @media (max-width: 768px) {
+        width: 100%!important;
+        .select2-container {
+          width: 100% !important;
+        }
+      }
+  }
+    .woo-account-select {
+      @media (max-width: 768px) {
+        width: 100%!important;
+      }
+    }
+    .woocommerce-MyAccount-content {
+      @media (max-width: 768px) {
+        margin-top: 1.5rem;
+      }
     }
     form .form-row .input-text, .woocommerce form .form-row select,
     .select2-container .select2-dropdown, .select2-container .select2-selection

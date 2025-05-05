@@ -12,41 +12,10 @@ remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_r
 
 function custom_add_my_account_endpoints() {
    // Main endpoint
-   add_rewrite_endpoint( 'my-boxes', EP_ROOT | EP_PAGES );
+   add_rewrite_endpoint( 'treat-boxes', EP_ROOT | EP_PAGES );
 
 }
 add_action( 'init', 'custom_add_my_account_endpoints' );
-
-// Handle the endpoint for editing a box
-function handle_my_boxes_endpoint() {
-    // Check if we are on the edit box page
-    if ( isset( $_GET['edit'] ) ) {
-        $box_id = absint( $_GET['edit'] );  // Get the box ID from the URL
-
-        // Check if box exists and is owned by the current user
-        $box = get_post( $box_id );
-        if ( $box && $box->post_author == get_current_user_id() ) {
-            // Display the form for editing the box
-            display_edit_box_form( $box );
-        } else {
-            echo 'You do not have permission to edit this box.';
-        }
-    }
-}
-add_action( 'woocommerce_account_my-boxes_edit_endpoint', 'handle_my_boxes_endpoint' );
-
-function flush_rewrite_rules_on_activation() {
-    register_my_account_endpoints();
-    flush_rewrite_rules();
-}
-add_action( 'after_switch_theme', 'flush_rewrite_rules_on_activation' );
-
-function custom_my_account_menu_items( $items ) {
-    $items['my-boxes'] = __( 'My Boxes', 'your-textdomain' );
-    return $items;
-}
-add_filter( 'woocommerce_account_menu_items', 'custom_my_account_menu_items' );
-
 
 function custom_my_account_menu_items_ordered( $items ) {
     // Save the original items
@@ -59,11 +28,11 @@ function custom_my_account_menu_items_ordered( $items ) {
     }
 
     // Add My Boxes next
-    $new_items['my-boxes'] = __( 'My Treat Boxes', 'your-textdomain' );
+    $new_items['treat-boxes'] = __( 'Treat Boxes', 'your-textdomain' );
 
     // Add the rest (in original order, minus dashboard)
     foreach ( $items as $key => $item ) {
-        if ( $key !== 'my-boxes' ) {
+        if ( $key !== 'treat-boxes' ) {
             $new_items[ $key ] = $item;
         }
     }
@@ -73,7 +42,7 @@ function custom_my_account_menu_items_ordered( $items ) {
 add_filter( 'woocommerce_account_menu_items', 'custom_my_account_menu_items_ordered' );
 
 function my_boxes_query_vars( $vars ) {
-    $vars[] = 'my-boxes';
+    $vars[] = 'treat-boxes';
     $vars[] = 'box_id';
     return $vars;
 }
@@ -82,8 +51,8 @@ add_filter( 'query_vars', 'my_boxes_query_vars' );
 function custom_my_account_boxes_content() {
     global $wp_query;
 
-    // Get sub-path after "my-boxes"
-    $sub_path = $wp_query->get( 'my-boxes' );
+    // Get sub-path after "treat-boxes"
+    $sub_path = $wp_query->get( 'treat-boxes' );
     $box_info = explode('edit/',$sub_path);
     $box_id = 0;
     if(isset($box_info[1])) {
@@ -199,22 +168,22 @@ function custom_my_account_boxes_content() {
         </script>
 
         <?php 
-        echo '<a href="' . esc_url( wc_get_account_endpoint_url( 'my-boxes' ) ) . '">← Back to My Boxes</a>';
+        echo '<a href="' . esc_url( wc_get_account_endpoint_url( 'treat-boxes' ) ) . '">← Back to All Treat Boxes</a>';
     }  elseif ( $box_id > 0  ) {
         // Show default "My Boxes"
         echo '<h2>Edit</h2>';
         display_edit_box_form($box_id);
     } elseif ( empty( $sub_path ) ) {
         // Show default "My Boxes"
-        echo '<h2>My Boxes</h2>';
+        echo '<h2>Active Treat Boxes</h2>';
         list_user_boxes();
-        echo '<a class="button" href="' . esc_url( wc_get_account_endpoint_url( 'my-boxes' ) . 'new-box/' ) . '">Add New Box</a>';
+        echo '<a class="button" href="' . esc_url( wc_get_account_endpoint_url( 'treat-boxes' ) . 'new-box/' ) . '">Add New Box</a>';
     } else {
         // Handle unknown subpages if needed
         echo '<p>Page not found.</p>';
     }
 }
-add_action( 'woocommerce_account_my-boxes_endpoint', 'custom_my_account_boxes_content' );
+add_action( 'woocommerce_account_treat-boxes_endpoint', 'custom_my_account_boxes_content' );
 
 function handle_new_box_submission() {
     if ( isset($_POST['submit_new_box']) ) {
@@ -267,7 +236,7 @@ function handle_new_box_submission() {
             if(!empty($errors)) {
                 wc_add_notice( implode('<br>',$errors), 'notice' );
             }
-            wp_redirect( wc_get_account_endpoint_url( 'my-boxes' ) );
+            wp_redirect( wc_get_account_endpoint_url( 'treat-boxes' ) );
             
             exit;
         } else {
@@ -275,7 +244,7 @@ function handle_new_box_submission() {
         }
     }
 }
-add_action( 'woocommerce_account_my-boxes_endpoint', 'handle_new_box_submission', 5 );
+add_action( 'woocommerce_account_treat-boxes_endpoint', 'handle_new_box_submission', 5 );
 
 function get_next_box_number() {
     $hh_box_count = get_option( 'hh_box_count', array() );
@@ -313,7 +282,7 @@ function list_user_boxes() {
         while ( $query->have_posts() ) {
             $query->the_post();
             echo '<li class="mb-2">';
-            echo '<a href="' . esc_url( wc_get_account_endpoint_url( 'my-boxes' ) . 'edit/' . get_the_ID() ) . '">' . get_the_title() . '</a>';
+            echo '<a href="' . esc_url( wc_get_account_endpoint_url( 'treat-boxes' ) . 'edit/' . get_the_ID() ) . '">' . get_the_title() . '</a>';
             echo '</li>';
         }
         echo '</ul>';
@@ -457,7 +426,7 @@ function display_edit_box_form($box_id) {
             echo 'You do not have permission to edit this box.';
         }
     }
-    echo '<a href="' . esc_url( wc_get_account_endpoint_url( 'my-boxes' ) ) . '">← Back to My Boxes</a>';
+    echo '<a href="' . esc_url( wc_get_account_endpoint_url( 'treat-boxes' ) ) . '">← Back to All Treat Boxes</a>';
 }
 
 function handle_edit_box_submission() {
@@ -511,10 +480,70 @@ function handle_edit_box_submission() {
             if(!empty($errors)) {
                 wc_add_notice( implode('<br>',$errors), 'notice' );
             }
-            //wp_redirect( wc_get_account_endpoint_url( 'my-boxes' ) );
+            //wp_redirect( wc_get_account_endpoint_url( 'treat-boxes' ) );
             //exit;
         }
     }
 }
 add_action( 'template_redirect', 'handle_edit_box_submission' );
 
+function wc_custom_end_point_page_title( $title ) {
+	global $wp_query;
+  
+	$is_endpoint = isset( $wp_query->query_vars['treat-boxes'] );
+  
+	if ( $is_endpoint && ! is_admin() && is_main_query() && in_the_loop() && is_account_page() ) {
+  
+	  $title = __( 'Treat Boxes', 'woocommerce' );
+  
+	  remove_filter( 'the_title', 'wc_custom_end_point_page_title' );
+	}
+  
+	  return $title;
+  }
+  add_filter( 'the_title', 'wc_custom_end_point_page_title' );
+
+  add_action( 'woocommerce_before_account_navigation', function() {
+    ?>
+    <div class="woo-account-select-wrapper">
+        <select class="woo-account-select select2">
+            <?php
+            $current_endpoint = WC()->query->get_current_endpoint();
+            foreach ( wc_get_account_menu_items() as $endpoint => $label ) {
+                $url = wc_get_account_endpoint_url( $endpoint );
+                $is_selected = ( $current_endpoint === $endpoint ) || ( empty( $current_endpoint ) && $endpoint === 'dashboard' );
+                printf(
+                    '<option value="%s"%s>%s</option>',
+                    esc_url( $url ),
+                    selected( $is_selected, true, false ),
+                    esc_html( $label )
+                );
+            }
+            ?>
+        </select>
+        </div>
+
+    <script>
+        jQuery(function($) {
+            $('.woo-account-select').selectWoo({
+                minimumResultsForSearch: Infinity
+            }); // Initializes WooSelect
+
+            $('.woo-account-select').on('change', function () {
+                window.location.href = $(this).val();
+            });
+        });
+    </script>
+    <?php
+} );
+
+
+add_filter("woocommerce_get_query_vars", function ($vars) {
+
+    foreach (["treat-boxes"] as $e) {
+        $vars[$e] = $e;
+    }
+
+    return $vars;
+
+});
