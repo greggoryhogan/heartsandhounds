@@ -312,3 +312,50 @@ function website_remove($fields)
    return $fields;
 }
 remove_action( 'set_comment_cookies', 'wp_set_comment_cookies' );
+
+function hearts_and_hounds_custom_comment_form_order( $fields ) {
+    // Reorder the fields: name, email, comment
+    $new_order = [];
+
+    if ( isset( $fields['author'] ) ) {
+        $new_order['author'] = $fields['author'];
+    }
+    if ( isset( $fields['email'] ) ) {
+        $new_order['email'] = $fields['email'];
+    }
+    if ( isset( $fields['comment'] ) ) {
+        $new_order['comment'] = $fields['comment'];
+    }
+
+    return $new_order;
+}
+add_filter( 'comment_form_fields', 'hearts_and_hounds_custom_comment_form_order' );
+
+function hearts_and_hounds_comment_form_notes( $defaults ) {
+    $defaults['comment_notes_before'] = '<p class="comment-notes">Have a treat box story to share? Share any stories, feedback, or a wagging tail moment from your visit. Your thoughts make a difference!</p>';
+    $defaults['comment_notes_after'] = ''; // Remove from below the textarea
+
+    return $defaults;
+}
+add_filter( 'comment_form_defaults', 'hearts_and_hounds_comment_form_notes' );
+
+function hearts_and_hounds_comment_field_descriptions( $fields ) {
+    if ( isset( $fields['author'] ) ) {
+        $fields['author'] = '<p class="comment-form-author">
+            <label for="author">Name</label>
+            <input id="author" name="author" type="text" required />
+            <small class="form-text text-muted">Please enter your first name or nickname.</small>
+        </p>';
+    }
+
+    if ( isset( $fields['email'] ) ) {
+        $fields['email'] = '<p class="comment-form-email">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required />
+            <small class="form-text text-muted">Your email won&rsquo;t be shown publicly.</small>
+        </p>';
+    }
+
+    return $fields;
+}
+add_filter( 'comment_form_fields', 'hearts_and_hounds_comment_field_descriptions' );
