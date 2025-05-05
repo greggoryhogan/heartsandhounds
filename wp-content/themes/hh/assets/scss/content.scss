@@ -22,6 +22,12 @@
           padding: 5px 0;
           display: block;
         }
+        .is-active {
+          a {
+            color: $dark-brown!important;
+            font-weight: bold;
+          }
+        }
       }
       
     }
@@ -97,4 +103,12 @@
   .wc-block-grid__product-add-to-cart {
     display: none!important;
   } 
+}
+
+
+
+#wp-about-your-box-wrap {
+  .wp-editor-tabs {
+    //float: none!important;
+  }
 }

@@ -1,0 +1,517 @@
+<?php 
+
+add_filter('loop_shop_columns', 'loop_columns');
+if (!function_exists('loop_columns')) {
+	function loop_columns() {
+		return 3; // 3 products per row
+	}
+}
+
+remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40 );
+remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20 );
+
+function custom_add_my_account_endpoints() {
+   // Main endpoint
+   add_rewrite_endpoint( 'my-boxes', EP_ROOT | EP_PAGES );
+
+}
+add_action( 'init', 'custom_add_my_account_endpoints' );
+
+// Handle the endpoint for editing a box
+function handle_my_boxes_endpoint() {
+    // Check if we are on the edit box page
+    if ( isset( $_GET['edit'] ) ) {
+        $box_id = absint( $_GET['edit'] );  // Get the box ID from the URL
+
+        // Check if box exists and is owned by the current user
+        $box = get_post( $box_id );
+        if ( $box && $box->post_author == get_current_user_id() ) {
+            // Display the form for editing the box
+            display_edit_box_form( $box );
+        } else {
+            echo 'You do not have permission to edit this box.';
+        }
+    }
+}
+add_action( 'woocommerce_account_my-boxes_edit_endpoint', 'handle_my_boxes_endpoint' );
+
+function flush_rewrite_rules_on_activation() {
+    register_my_account_endpoints();
+    flush_rewrite_rules();
+}
+add_action( 'after_switch_theme', 'flush_rewrite_rules_on_activation' );
+
+function custom_my_account_menu_items( $items ) {
+    $items['my-boxes'] = __( 'My Boxes', 'your-textdomain' );
+    return $items;
+}
+add_filter( 'woocommerce_account_menu_items', 'custom_my_account_menu_items' );
+
+
+function custom_my_account_menu_items_ordered( $items ) {
+    // Save the original items
+    $new_items = [];
+
+    // Add Dashboard first
+    if ( isset( $items['dashboard'] ) ) {
+        $new_items['dashboard'] = $items['dashboard'];
+        unset( $items['dashboard'] );
+    }
+
+    // Add My Boxes next
+    $new_items['my-boxes'] = __( 'My Treat Boxes', 'your-textdomain' );
+
+    // Add the rest (in original order, minus dashboard)
+    foreach ( $items as $key => $item ) {
+        if ( $key !== 'my-boxes' ) {
+            $new_items[ $key ] = $item;
+        }
+    }
+
+    return $new_items;
+}
+add_filter( 'woocommerce_account_menu_items', 'custom_my_account_menu_items_ordered' );
+
+function my_boxes_query_vars( $vars ) {
+    $vars[] = 'my-boxes';
+    $vars[] = 'box_id';
+    return $vars;
+}
+add_filter( 'query_vars', 'my_boxes_query_vars' );
+
+function custom_my_account_boxes_content() {
+    global $wp_query;
+
+    // Get sub-path after "my-boxes"
+    $sub_path = $wp_query->get( 'my-boxes' );
+    $box_info = explode('edit/',$sub_path);
+    $box_id = 0;
+    if(isset($box_info[1])) {
+        $box_id = absint($box_info[1]);
+    }
+
+
+    if ( $sub_path === 'new-box' ) {
+        // Show "Add New Box"
+        echo '<h2>Add New Treat Box</h2>';
+        
+        ?>
+        <form method="post" id="add-new-box-form">
+            <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                <label for="box_name">Box Name</label>
+                <input type="text" class="input-text" name="box_name" id="box_name" required />
+            </p>
+            <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                <?php $hh_box_count = get_next_box_number(); ?>
+                <label for="box_number">Box Number</label>
+                <input type="number" class="input-text" name="box_number" id="box_number" required value="<?php echo $hh_box_count; ?>" />
+                <span><em>You can pick any box number you&rsquo;d like, the default is the next box number available.</em></span>
+            </p>
+            <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                <label for="location">Location</label>
+                <input type="text" class="input-text" name="location" id="location" />
+            </p>
+
+            <div id="shelters-wrapper">
+                <label>Shelters We Support</label>
+                <div class="shelter-group">
+                    <p class="woocommerce-form-row woocommerce-form-row--first form-row form-row-first">
+                        <label>Shelter Name</label>
+                        <input type="text" class="input-text" name="shelters[0][name]" />
+                    </p>
+                    <p class="woocommerce-form-row woocommerce-form-row--last form-row form-row-last">
+                        <label>Shelter Link</label>
+                        <input type="url" class="input-text" name="shelters[0][link]" />
+                    </p>
+                    <p>
+                        <button type="button" class="remove-shelter" style="display: none;">Remove</button>
+                    </p>
+                    <div class="clear"></div>
+                </div>
+            </div>
+
+            <p>
+                <button type="button" id="add-shelter" class="add-shelter">+ Add Another Shelter</button>
+            </p>
+
+            <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                <label for="about">Take a moment to share why you started this treat box. Your story will be displayed so visitors can learn more about the inspiration behind it.</label>
+                <?php
+                $default = '<strong>This treat box is part of Hearts and Hounds</strong>, a community project spreading kindness to local pups while raising awareness for shelter dogs in need. Help yourself to a treat for your furry friend, and take a moment to check out the featured rescue nearby. Every tail wag helps share their story!';
+                wp_editor(
+                    $default, // Initial content
+                    'about-your-box', // Editor ID
+                    array(
+                        'textarea_name' => 'about-your-box',
+                        'media_buttons' => false,
+                        'textarea_rows' => 6,
+                        'teeny' => true, // Simplified editor
+                        'tinymce' => array( 
+                            'content_css' => HH_URL.'/wp-content/themes/hh/assets/css/editor.css'
+                        )
+                    )
+                ); ?>
+            </p>
+
+            
+
+
+            <p>
+                <button type="submit" name="submit_new_box" class="button mt-2 mb-4">Publish Treat Box</button>
+            </p>
+        </form>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                let shelterCount = 1;
+
+                function createShelterGroup(index) {
+                    const div = document.createElement('div');
+                    div.classList.add('shelter-group');
+                    div.innerHTML = `
+                        <p class="woocommerce-form-row woocommerce-form-row--first form-row form-row-first">
+                            <input type="text" class="input-text" name="shelters[${index}][name]" />
+                        </p>
+                        <p class="woocommerce-form-row woocommerce-form-row--last form-row form-row-last">
+                            <input type="url" class="input-text name="shelters[${index}][link]" />
+                        </p>
+                        
+                            <a class="remove-shelter">Remove</a>
+                            <div class="clear"></div>
+                        
+                    `;
+                    return div;
+                }
+
+                document.getElementById('add-shelter').addEventListener('click', function () {
+                    const wrapper = document.getElementById('shelters-wrapper');
+                    const newGroup = createShelterGroup(shelterCount++);
+                    wrapper.appendChild(newGroup);
+                });
+
+                document.getElementById('shelters-wrapper').addEventListener('click', function (e) {
+                    if (e.target && e.target.classList.contains('remove-shelter')) {
+                        const group = e.target.closest('.shelter-group');
+                        if (group) group.remove();
+                    }
+                });
+            });
+        </script>
+
+        <?php 
+        echo '<a href="' . esc_url( wc_get_account_endpoint_url( 'my-boxes' ) ) . '">← Back to My Boxes</a>';
+    }  elseif ( $box_id > 0  ) {
+        // Show default "My Boxes"
+        echo '<h2>Edit</h2>';
+        display_edit_box_form($box_id);
+    } elseif ( empty( $sub_path ) ) {
+        // Show default "My Boxes"
+        echo '<h2>My Boxes</h2>';
+        list_user_boxes();
+        echo '<a class="button" href="' . esc_url( wc_get_account_endpoint_url( 'my-boxes' ) . 'new-box/' ) . '">Add New Box</a>';
+    } else {
+        // Handle unknown subpages if needed
+        echo '<p>Page not found.</p>';
+    }
+}
+add_action( 'woocommerce_account_my-boxes_endpoint', 'custom_my_account_boxes_content' );
+
+function handle_new_box_submission() {
+    if ( isset($_POST['submit_new_box']) ) {
+        $errors = array();
+        $box_name   = sanitize_text_field($_POST['box_name']);
+        $box_number = sanitize_text_field($_POST['box_number']);
+
+        $hh_box_count = get_option( 'hh_box_count', array() );
+        if(in_array($box_number, $hh_box_count)) {
+            $box_number = get_next_box_number();
+            $errors[] = 'The box number you specified is not available. You have been assigned a new box number but can edit your box to set a new number.';
+        }
+        
+
+        $location   = sanitize_text_field($_POST['location']);
+        
+        // Allow safe HTML in About field
+        $about = wp_kses_post($_POST['about-your-box']);
+
+        // Shelters is a nested array
+        $shelters = isset($_POST['shelters']) ? array_map(function($s) {
+            return [
+                'name' => sanitize_text_field($s['name'] ?? ''),
+                'link' => esc_url_raw($s['link'] ?? '')
+            ];
+        }, $_POST['shelters']) : [];
+
+        // Create custom post (e.g., 'box' post type)
+        $post_id = wp_insert_post([
+            'post_type'    => 'post',
+            'post_title'   => $box_name,
+            'post_name' => 'box'.$box_number,
+            'post_content' => $about, // Store About content here
+            'post_status'  => 'publish',
+            'post_author'  => get_current_user_id(),
+            'meta_input'   => [
+                'box_number' => $box_number,
+                'location'   => $location,
+                'shelters'   => $shelters,
+            ]
+        ]);
+
+        if ( $post_id ) {
+            //update box numbers
+            //$lowest_boxget_next_box_number()
+            $hh_box_count[] = $box_number;
+            update_option('hh_box_count', $hh_box_count);
+
+            wc_add_notice( 'Your treat box has been created!!', 'success' );
+            if(!empty($errors)) {
+                wc_add_notice( implode('<br>',$errors), 'notice' );
+            }
+            wp_redirect( wc_get_account_endpoint_url( 'my-boxes' ) );
+            
+            exit;
+        } else {
+            wc_add_notice( 'There was an error saving your box.', 'error' );
+        }
+    }
+}
+add_action( 'woocommerce_account_my-boxes_endpoint', 'handle_new_box_submission', 5 );
+
+function get_next_box_number() {
+    $hh_box_count = get_option( 'hh_box_count', array() );
+    if (empty($hh_box_count)) {
+        $lowest_value = 1; // Set to 1 if array is empty
+    } else {
+        $lowest_value = min($hh_box_count) + 1; // Find the lowest value if the array is not empty
+    }
+    return $lowest_value;
+}
+
+function list_user_boxes() {
+    // Get the current user ID
+    $user_id = get_current_user_id();
+    
+    if ( ! $user_id ) {
+        echo 'Please log in to view your boxes.';
+        return;
+    }
+
+    // Query to get 'box' custom post type posts by the current user
+    $args = array(
+        'post_type'      => 'post',           // Your custom post type
+        'posts_per_page' => -1,              // Get all posts
+        'post_status'    => 'publish',       // Only published posts
+        'author'         => $user_id,        // Filter by the current user
+    );
+
+    // The Query
+    $query = new WP_Query( $args );
+
+    // Check if there are any posts
+    if ( $query->have_posts() ) {
+        echo '<ul>';
+        while ( $query->have_posts() ) {
+            $query->the_post();
+            echo '<li class="mb-2">';
+            echo '<a href="' . esc_url( wc_get_account_endpoint_url( 'my-boxes' ) . 'edit/' . get_the_ID() ) . '">' . get_the_title() . '</a>';
+            echo '</li>';
+        }
+        echo '</ul>';
+    } else {
+        echo 'You have not created any boxes yet.';
+    }
+
+    // Reset Post Data
+    wp_reset_postdata();
+}
+
+
+function display_edit_box_form($box_id) {
+    // Get the current user ID
+    $user_id = get_current_user_id();
+
+    if ( ! $user_id ) {
+        echo 'Please log in to edit your box.';
+        return;
+    }
+
+    
+    if ( $box_id ) {
+        $box = get_post( $box_id );
+        echo '<div class="mb-2">Visit: <a href="'.get_permalink($box_id).'" title="View your box">'.get_permalink($box_id).'</a></div>';
+        // Check if the box exists and is authored by the current user
+        if ( $box && $box->post_author == $user_id ) {
+            // Get current post meta for the box
+            $box_name   = get_the_title( $box_id );
+            $box_number   = get_post_meta($box_id,'box_number',true);
+            $location   = get_post_meta( $box_id, 'location', true );
+            $about      = get_post_field('post_content',$box_id);
+            $shelters   = get_post_meta( $box_id, 'shelters', true );
+
+            // Display the edit form
+            ?>
+            <form method="POST">
+                <input type="hidden" name="box_id" value="<?php echo $box_id; ?>" />
+                    
+                <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                    <label for="box_name">Box Name</label>
+                    <input type="text" class="input-text" name="box_name" value="<?php echo esc_attr( $box_name ); ?>" required>
+                </p>
+
+                <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                    <?php $hh_box_count = get_next_box_number(); ?>
+                    <label for="box_number">Box Number</label>
+                    <input type="number" class="input-text" name="box_number" id="box_number" required value="<?php echo absint($box_number); ?>" />
+                    <span><em>You can pick any box number you&rsquo;d like, the default is the next box number available. <br>Changing your box number will change the public url for your page.</em></span>
+                </p>
+                
+                <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                    <label for="location">Location</label>
+                    <input type="text" class="input-text" name="location" value="<?php echo esc_attr( $location ); ?>" required>
+                </p>
+
+                <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                    <label for="shelters">Shelters We Support</label>
+                </p>
+                    <div id="shelters-wrapper">
+                        <?php
+                        if ( ! empty( $shelters ) && is_array( $shelters ) ) {
+                            foreach ( $shelters as $index => $shelter ) {
+                                ?>
+                                <div class="shelter-group">
+                                    <p class="woocommerce-form-row woocommerce-form-row--first form-row form-row-first">
+                                        <input type="text" class="input-text" name="shelters[<?php echo $index; ?>][name]" value="<?php echo esc_attr( $shelter['name'] ); ?>" placeholder="Shelter Name">
+                                    </p>
+                                    <p class="woocommerce-form-row woocommerce-form-row--last form-row form-row-last">
+                                        <input type="url" class="input-text" name="shelters[<?php echo $index; ?>][link]" value="<?php echo esc_url( $shelter['link'] ); ?>" placeholder="Shelter Link">
+                                    </p>
+                                    
+                                    <a class="remove-shelter">Remove</a>
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="clear"></div>
+                                <?php
+                            }
+                        }
+                        ?>
+                        
+                    </div>
+                
+                <p>
+                    <button type="button" id="add-shelter" class="add-shelter">+ Add Shelter</button>
+                </p>
+                
+                <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                    <label for="about">Take a moment to share why you started this treat box. Your story will be displayed so visitors can learn more about the inspiration behind it.</label>
+                    <?php
+                    wp_editor(
+                        $about, // Initial content
+                        'about-your-box', // Editor ID
+                        array(
+                            'textarea_name' => 'about-your-box',
+                            'media_buttons' => false,
+                            'textarea_rows' => 6,
+                            'teeny' => true, // Simplified editor
+                            'tinymce' => array( 
+                                'content_css' => HH_URL.'/wp-content/themes/hh/assets/css/editor.css'
+                            )
+                        )
+                    );
+                    ?>
+                </p>
+                
+                
+                <div class="clear"></div>
+                <button type="submit" class="button mt-2 mb-4" name="update_box">Save Changes</button>
+            </form>
+            <script>
+                document.getElementById('add-shelter').addEventListener('click', function() {
+                    var wrapper = document.getElementById('shelters-wrapper');
+                    var index = wrapper.querySelectorAll('.shelter-group').length;
+                    var shelterGroup = document.createElement('div');
+                    shelterGroup.classList.add('shelter-group');
+                    shelterGroup.innerHTML = `
+                        <p class="woocommerce-form-row woocommerce-form-row--first form-row form-row-first">
+                            <input type="text" class="input-text" name="shelters[${index}][name]" placeholder="Shelter Name">
+                        </p>
+                        <p class="woocommerce-form-row woocommerce-form-row--last form-row form-row-last">
+                            <input type="url" class="input-text" name="shelters[${index}][link]" placeholder="Shelter Link">
+                        </p>
+                        <a class="remove-shelter">Remove</a>
+                    <div class="clear"></div>
+                    `;
+                    wrapper.appendChild(shelterGroup);
+                });
+
+                document.getElementById('shelters-wrapper').addEventListener('click', function(e) {
+                    if (e.target && e.target.classList.contains('remove-shelter')) {
+                        e.target.closest('.shelter-group').remove();
+                    }
+                });
+            </script>
+            <?php
+        } else {
+            echo 'You do not have permission to edit this box.';
+        }
+    }
+    echo '<a href="' . esc_url( wc_get_account_endpoint_url( 'my-boxes' ) ) . '">← Back to My Boxes</a>';
+}
+
+function handle_edit_box_submission() {
+    if ( isset( $_POST['update_box'] ) && isset( $_POST['box_id'] ) ) {
+        $box_id = intval( $_POST['box_id'] );
+        $user_id = get_current_user_id();
+        $errors = array();
+        // Make sure the user is the author of the box
+        $box = get_post( $box_id );
+        if ( $box && $box->post_author == $user_id ) {
+            // Sanitize inputs
+            $box_name = sanitize_text_field( $_POST['box_name'] );
+            $location = sanitize_text_field( $_POST['location'] );
+            $about    = wp_kses_post( $_POST['about-your-box'] );  // Allow HTML in the About field
+            $shelters = isset($_POST['shelters']) ? array_map(function($s) {
+                return [
+                    'name' => sanitize_text_field($s['name'] ?? ''),
+                    'link' => esc_url_raw($s['link'] ?? '')
+                ];
+            }, $_POST['shelters']) : [];
+
+            $current_box = get_post_meta($box_id,'box_number',true);
+            $box_number = sanitize_text_field($_POST['box_number']);
+            if($current_box != $box_number) {
+                $hh_box_count = get_option( 'hh_box_count', array() );
+                if(($key = array_search($current_box, $hh_box_count)) !== false) {
+                    unset($hh_box_count[$key]);
+                }    
+                if(in_array($box_number, $hh_box_count)) {
+                    $box_number = get_next_box_number();
+                    $errors[] = 'The box number you specified is not available. You have been assigned a new box number but can edit your box to set a new number.';
+                }
+                update_option('hh_box_count',$hh_box_count);
+            }
+
+            // Update the box post
+            $post_data = array(
+                'ID'           => $box_id,
+                'post_title'   => $box_name,
+                'post_content' => $about,
+                'post_name' => 'box'.$box_number,
+            );
+            wp_update_post( $post_data );
+
+            // Update the post meta
+            update_post_meta( $box_id, 'location', $location );
+            update_post_meta( $box_id, 'shelters', $shelters );
+
+            // Display success message
+            wc_add_notice( 'Your box has been updated!', 'success' );
+            if(!empty($errors)) {
+                wc_add_notice( implode('<br>',$errors), 'notice' );
+            }
+            //wp_redirect( wc_get_account_endpoint_url( 'my-boxes' ) );
+            //exit;
+        }
+    }
+}
+add_action( 'template_redirect', 'handle_edit_box_submission' );
+
