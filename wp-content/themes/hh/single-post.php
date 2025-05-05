@@ -44,7 +44,7 @@ if ( have_posts() ) {
 
 			if ( comments_open() || get_comments_number() ) :
 				echo '<div class="row">';
-					echo '<div class="col-12 col-md-8 offset-md-4 offset-0 pt-3 mt-md-5 mt-2 pt-md-5">';
+					echo '<div class="col-12 col-md-8 offset-md-4 offset-0 pt-3 mt-md-3 mt-2 pt-md-5">';
 						echo '<div class="bg-white rounded p-3 comments-section">';
 							comments_template();  // This loads the default WordPress comment template
 						echo '</div>';
