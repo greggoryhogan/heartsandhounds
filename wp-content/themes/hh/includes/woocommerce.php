@@ -232,6 +232,7 @@ function handle_new_box_submission() {
         ]);
 
         if ( $post_id ) {
+            wp_mail('outreach@heartsandhounds.org','Treatbox Created!','Visit it here - '.get_permalink( $post_id ));
             //update box numbers
             //$lowest_boxget_next_box_number()
             $hh_box_count[] = $box_number;
