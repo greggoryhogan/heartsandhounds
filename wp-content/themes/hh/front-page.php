@@ -61,7 +61,7 @@ echo '</div>';
 	echo '<div class="container-md text-center mt-5">';
 
 			echo '<h2>Together, we can turn daily walks into small acts of rescue.</h2>';
-			echo '<p>Not everyone can adopt, but everyone can care. By registering your treat box, you can help others learn how to to support shelter animals in their community, and give shelters the extra support they need to run successfully. Invite your neighbors to think about rescue in a low-pressure, feel-good way.</p>';
+			echo '<p>Not everyone can adopt, but everyone can care. By registering your existing treat box, you can help others learn how to to support shelter animals in their community, and give shelters the extra support they need to run successfully. Invite your neighbors to think about rescue in a low-pressure, feel-good way.</p>';
 			echo '<p>With every wagging tail and every shared link, we help build awareness, spark compassion, and maybe -just maybe- bring a few more dogs home.</p>';
 			
 			echo '<a href="/my-account/treat-boxes/" class="button button-large button-red">Register Your Treat Box</a>';
