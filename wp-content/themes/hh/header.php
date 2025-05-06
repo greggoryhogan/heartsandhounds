@@ -6,7 +6,7 @@
 </head>
 <body <?php body_class('bootstrap-wrapper'); ?>>
 <header class="site-header pt-3" id="navbar" >
-    <div class="container">
+    <div class="container-xl">
         <div class="row">
             <div class="col-md-5 d-none d-lg-block">
                 <?php hh_wp_nav_menu('menu-left', 2, 'justify-content-end menu-left'); ?>
@@ -27,7 +27,7 @@
             </div>
 		</div>
     </div>
-    <div class="collapse container" id="mobile-nav">
+    <div class="collapse container-xl" id="mobile-nav">
         <div class="d-flex flex-column d-lg-none">
             <?php hh_wp_nav_menu('menu-left', 2, 'd-flex flex-column'); ?>
             <?php hh_wp_nav_menu('menu-right', 2, 'd-flex flex-column'); ?>
