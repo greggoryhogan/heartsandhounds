@@ -19,7 +19,7 @@ if ( have_posts() ) {
 				}
 			}
 		}
-		echo '<div class="container pt-4 box-details">';
+		echo '<div class="container-xl pt-4 box-details">';
 			echo '<div class="row">';
 				echo '<div class="col-12 col-md-4">';
 					echo '<div class="box-info">';
