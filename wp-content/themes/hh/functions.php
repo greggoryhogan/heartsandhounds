@@ -55,7 +55,7 @@ function hh_early_head_customization() {
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 	<meta name="apple-mobile-web-app-title" content="hh Repeating Arms">
 	<meta name="theme-color" content="##191102" />
-	<!--<meta name="fo-verify" content="9b22ec78-dd99-42d4-8ab6-4dc2cb5bbace" />-->
+	<meta name="fo-verify" content="9b22ec78-dd99-42d4-8ab6-4dc2cb5bbace" />
 	<?php 
 }
 
