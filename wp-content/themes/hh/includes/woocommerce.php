@@ -324,9 +324,9 @@ function display_edit_box_form($box_id) {
             $shelters   = get_post_meta( $box_id, 'shelters', true );
             $link = str_replace($box->post_name, 'box'.$box_number, $permalink);
             $link2 = 'https://mytreatbox.org/'.$box->post_name;
-            $link3 = 'https://mytreatbox.org/box-'.$box_number;
+            $link3 = 'https://mytreatbox.org/box'.$box_number;
             $link4 = 'https://hhbox.org/'.$box->post_name;
-            $link5 = 'https://hhbox.org/box-'.$box_number;
+            $link5 = 'https://hhbox.org/box'.$box_number;
             echo '<div class="mb-2 d-flex flex-column">
                 <div>Direct Link: <a href="'.$permalink.'" title="View your box">'.$permalink.'</a></div>
                 <div class="d-flex"><div>Easy Links:&nbsp;&nbsp;</div><div class="d-flex flex-column">
