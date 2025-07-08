@@ -23,7 +23,7 @@ if ( have_posts() ) {
 			echo '<div class="row">';
 				echo '<div class="col-12 col-md-4">';
 					echo '<div class="box-info">';
-						echo '<h1 class="pt-0 pb-1 mt-0 mb-1 m-0 border-bottom">'.get_the_title().'</h1>';
+						echo '<h1 class="pt-0 pb-1 mt-0 mb-1 m-0 border-bottom">'.get_the_title().'&rsquo;s Box</h1>';
 						echo '<h2 class="pt-0 mb-0">Box #'.$box.'</h2>';
 						
 						if($location != '') {

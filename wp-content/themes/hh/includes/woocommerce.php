@@ -314,12 +314,6 @@ function display_edit_box_form($box_id) {
     if ( $box_id ) {
         $box = get_post( $box_id );
         $permalink = get_permalink($box_id);
-        $link = str_replace(trailingslashit(get_bloginfo('url')), 'https://hhbox.org/', $permalink);
-        $text = str_replace('https://','',$link);
-        echo '<div class="mb-2 d-flex flex-column">
-            <div>Direct Link: <a href="'.$permalink.'" title="View your box">'.$permalink.'</a></div>
-            <div>Easy Link: <a href="'.$link.'" title="View your box">'.$text.'</a></div>
-        </div>';
         // Check if the box exists and is authored by the current user
         if ( $box && $box->post_author == $user_id ) {
             // Get current post meta for the box
@@ -328,12 +322,27 @@ function display_edit_box_form($box_id) {
             $location   = get_post_meta( $box_id, 'location', true );
             $about      = get_post_field('post_content',$box_id);
             $shelters   = get_post_meta( $box_id, 'shelters', true );
-
+            $link = str_replace($box->post_name, 'box'.$box_number, $permalink);
+            $link2 = 'https://mytreatbox.org/'.$box->post_name;
+            $link3 = 'https://mytreatbox.org/box-'.$box_number;
+            $link4 = 'https://hhbox.org/'.$box->post_name;
+            $link5 = 'https://hhbox.org/box-'.$box_number;
+            echo '<div class="mb-2 d-flex flex-column">
+                <div>Direct Link: <a href="'.$permalink.'" title="View your box">'.$permalink.'</a></div>
+                <div class="d-flex"><div>Easy Links:&nbsp;&nbsp;</div><div class="d-flex flex-column">
+                    <a href="'.$link.'" title="View your box">'.str_replace('https://','',$link).'</a>
+                    <a href="'.$link2.'" title="View your box">'.str_replace('https://','',$link2).'</a>
+                    <a href="'.$link3.'" title="View your box">'.str_replace('https://','',$link3).'</a>
+                    <a href="'.$link4.'" title="View your box">'.str_replace('https://','',$link4).'</a>
+                    <a href="'.$link5.'" title="View your box">'.str_replace('https://','',$link5).'</a>
+                </div></div>
+            </div>';
             // Display the edit form
             ?>
             <form method="POST" id="edit-box-form">
                 <input type="hidden" name="box_id" value="<?php echo $box_id; ?>" />
-                    
+                
+                <p class="mt-3 mb-0"><em><strong>Warning: </strong>Changing your box name and/or number will change the shareable links to your page.</em></p>
                 <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
                     <label for="box_name">Box Name</label>
                     <input type="text" class="input-text" name="box_name" value="<?php echo esc_attr( $box_name ); ?>" required>
@@ -342,7 +351,7 @@ function display_edit_box_form($box_id) {
                 <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
                     <?php $hh_box_count = get_next_box_number(); ?>
                     <label for="box_number">Box Number</label>
-                    <span class="d-block"><em>Pick any box number you&rsquo;d like, the default is the next box number available. <br>Changing your box number will change the direct link to your page.</em></span>
+                    <span class="d-block"><em>Pick any box number you&rsquo;d like, the default is the next box number available.</em></span>
                     <input type="number" class="input-text" name="box_number" id="box_number" required value="<?php echo absint($box_number); ?>" />
                 </p>
                 
@@ -502,12 +511,14 @@ function handle_edit_box_submission() {
                     'ID'           => $box_id,
                     'post_title'   => $box_name,
                     'post_content' => $about,
-                    'post_name' => 'box'.$box_number,
+                    'post_name' => sanitize_title($box_name),  
                 );
+                //'post_name' => 'box'.$box_number,
                 wp_update_post( $post_data );
 
                 // Update the post meta
                 update_post_meta( $box_id, 'location', $location );
+                update_post_meta( $box_id, 'box_number', $box_number );
                 update_post_meta( $box_id, 'shelters', $shelters );
 
                 //attempt to clear cache
