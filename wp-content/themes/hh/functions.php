@@ -373,7 +373,7 @@ add_filter('template_redirect',function() {
 		global $wp_query;
 		if(is_array($wp_query->query)) {
 			if(isset($wp_query->query['name'])) {
-				$path = str_replace('box','',str_replace('-', '',sanitize_text_field( $wp_query->query['name'] )));
+				$path = str_replace('box','',str_replace('box-', '',sanitize_text_field( $wp_query->query['name'] )));
 				$query = new WP_Query( array(
 					'post_type' => 'post',
 					'meta_query' => array(
