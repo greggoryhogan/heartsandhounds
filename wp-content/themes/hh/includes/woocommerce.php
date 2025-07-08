@@ -345,6 +345,7 @@ function display_edit_box_form($box_id) {
                 <p class="mt-3 mb-0"><em><strong>Warning: </strong>Changing your box name and/or number will change the shareable links to your page.</em></p>
                 <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
                     <label for="box_name">Box Name</label>
+                    <span class="d-block"><em>&ldquo;&rsquo;s Box&rdquo; will be appended on your public page. Currently displayed as &ldquo;<?php echo $box_name; ?>&rsquo;s Box</em></span>
                     <input type="text" class="input-text" name="box_name" value="<?php echo esc_attr( $box_name ); ?>" required>
                 </p>
 
