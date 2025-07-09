@@ -374,3 +374,32 @@ function hearts_and_hounds_comment_field_descriptions( $fields ) {
 }
 add_filter( 'comment_form_fields', 'hearts_and_hounds_comment_field_descriptions' );
 
+add_filter('template_redirect',function() {
+	if ( is_404() ) {
+		global $wp_query;
+		if(is_array($wp_query->query)) {
+			if(isset($wp_query->query['name'])) {
+				$path = str_replace('box','',str_replace('box-', '',sanitize_text_field( $wp_query->query['name'] )));
+				$query = new WP_Query( array(
+					'post_type' => 'post',
+					'meta_query' => array(
+						array(
+							'key' => 'box_number',
+							'value' => $path,
+							'compare' => '='
+						)
+					)
+				));
+				if($query->have_posts()) {
+					 while($query->have_posts()) {
+						$query->the_post();
+						wp_redirect(get_permalink(get_the_ID()));
+						exit;
+					 }
+				}
+
+			}
+		}
+	}
+	
+});

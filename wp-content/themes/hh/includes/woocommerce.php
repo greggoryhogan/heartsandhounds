@@ -226,7 +226,7 @@ function handle_new_box_submission() {
         $post_id = wp_insert_post([
             'post_type'    => 'post',
             'post_title'   => $box_name,
-            'post_name' => 'box'.$box_number,
+            'post_name' => sanitize_title($box_name),  
             'post_content' => $about, // Store About content here
             'post_status'  => 'publish',
             'post_author'  => get_current_user_id(),
