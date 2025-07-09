@@ -375,7 +375,7 @@ function display_edit_box_form($box_id) {
                 <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
                     <label for="location">Location</label>
                     <span class="d-block"><em>Be as vague or specific as you&rsquo;re comfortable with.</em></span>
-                    <input type="text" class="input-text" name="location" value="<?php echo esc_attr( $location ); ?>" required>
+                    <input type="text" class="input-text" name="location" value="<?php echo esc_attr( $location ); ?>">
                 </p>
 
                 <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
