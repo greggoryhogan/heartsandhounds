@@ -63,6 +63,16 @@ if ( have_posts() ) {
 					echo '</div>';
 				echo '</div>';
 			}
+
+			echo '<div class="row">';
+				echo '<div class="col-12 col-md-8 offset-md-4 offset-0 pt-3 mt-md-0 mt-2 pt-md-4">';
+					echo '<div class="d-block d-md-nones bg-white p-3 rounded  pt-3">';
+						echo '<p class="mb-0 p-0"><strong>Do you have a treat box?</strong> Sign up for Hearts &amp; Hounds to support your local shelter too!</p>';
+						//echo '<h3 class="mb-0 pt-1 mt-0">Shelters we support:</h3>';
+						echo '<a href="' . trailingslashit(get_bloginfo('url')) . 'my-account/" class="button me-2">Register or Sign Up</a>';
+					echo '</div>';
+				echo '</div>';
+			echo '</div>';
 		echo '</div>';
 	} // end while
 } // end if

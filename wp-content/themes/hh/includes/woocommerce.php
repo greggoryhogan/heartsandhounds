@@ -58,9 +58,28 @@ function custom_my_account_boxes_content() {
     if(isset($box_info[1])) {
         $box_id = absint($box_info[1]);
     }
-
-
+    
     if ( $sub_path === 'new-box' ) {
+         new_box_form();
+    }  elseif ( $box_id > 0  ) {
+        // Show default "My Boxes"
+        echo '<h2>Edit</h2>';
+        display_edit_box_form($box_id);
+    } elseif ( empty( $sub_path ) ) {
+        // Show default "My Boxes"
+        echo '<h2>Active Treat Boxes</h2>';
+        list_user_boxes();
+        echo '<a class="button" href="' . esc_url( wc_get_account_endpoint_url( 'treat-boxes' ) . 'new-box/' ) . '">Add New Box</a>';
+    } else {
+        // Handle unknown subpages if needed
+        echo '<p>Page not found.</p>';
+    }
+}
+add_action( 'woocommerce_account_treat-boxes_endpoint', 'custom_my_account_boxes_content', 10 );
+
+function new_box_form() {
+    wc_print_notices();
+    if ( !isset($_POST['submit_new_box']) ) {
         // Show "Add New Box"
         echo '<h2>Add New Treat Box</h2>';
         
@@ -68,6 +87,7 @@ function custom_my_account_boxes_content() {
         <form method="post" id="add-new-box-form">
             <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
                 <label for="box_name">Box Name</label>
+                <span class="d-block"><em>&ldquo;&rsquo;s Box&rdquo; will be appended on your public page. <br>For example. If you set &lsquo;Doug&rsquo; it will be displayed as &ldquo;Doug&rsquo;s Box&rdquo;</em></span>
                 <input type="text" class="input-text" name="box_name" id="box_name" required />
             </p>
             <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
@@ -173,30 +193,16 @@ function custom_my_account_boxes_content() {
         </script>
 
         <?php 
-        echo '<a href="' . esc_url( wc_get_account_endpoint_url( 'treat-boxes' ) ) . '">← Back to All Treat Boxes</a>';
-    }  elseif ( $box_id > 0  ) {
-        // Show default "My Boxes"
-        echo '<h2>Edit</h2>';
-        display_edit_box_form($box_id);
-    } elseif ( empty( $sub_path ) ) {
-        // Show default "My Boxes"
-        echo '<h2>Active Treat Boxes</h2>';
-        list_user_boxes();
-        echo '<a class="button" href="' . esc_url( wc_get_account_endpoint_url( 'treat-boxes' ) . 'new-box/' ) . '">Add New Box</a>';
-    } else {
-        // Handle unknown subpages if needed
-        echo '<p>Page not found.</p>';
     }
+    echo '<a href="' . esc_url( wc_get_account_endpoint_url( 'treat-boxes' ) ) . '">← Back to All Treat Boxes</a>';
 }
-add_action( 'woocommerce_account_treat-boxes_endpoint', 'custom_my_account_boxes_content' );
-
 function handle_new_box_submission() {
     if ( isset($_POST['submit_new_box']) ) {
         $errors = array();
         $box_name   = sanitize_text_field($_POST['box_name']);
         $box_number = sanitize_text_field($_POST['box_number']);
 
-        $hh_box_count = get_option( 'hh_box_count', array() );
+        $hh_box_count = maybe_unserialize(get_option( 'hh_box_count', array() ));
         if(in_array($box_number, $hh_box_count)) {
             $box_number = get_next_box_number();
             $errors[] = 'The box number you specified is not available. You have been assigned a new box number but can edit your box to set a new number.';
@@ -238,26 +244,36 @@ function handle_new_box_submission() {
             $hh_box_count[] = $box_number;
             update_option('hh_box_count', $hh_box_count);
 
-            wc_add_notice( 'Your treat box has been created!!', 'success' );
+            wc_add_notice( 'Your treat box has been created! <a href="'.wc_get_account_endpoint_url( 'treat-boxes' ).'">View Your Treat Boxes</a>', 'success' );
             if(!empty($errors)) {
                 wc_add_notice( implode('<br>',$errors), 'notice' );
             }
-            wp_redirect( wc_get_account_endpoint_url( 'treat-boxes' ) );
+            //wp_redirect( wc_get_account_endpoint_url( 'treat-boxes' ) );
             
-            exit;
+            //exit;
         } else {
             wc_add_notice( 'There was an error saving your box.', 'error' );
         }
+    } else {
+
     }
 }
 add_action( 'woocommerce_account_treat-boxes_endpoint', 'handle_new_box_submission', 5 );
 
 function get_next_box_number() {
-    $hh_box_count = get_option( 'hh_box_count', array() );
+    $hh_box_count = maybe_unserialize(get_option( 'hh_box_count', array() ));
     if (empty($hh_box_count)) {
         $lowest_value = 1; // Set to 1 if array is empty
     } else {
-        $lowest_value = min($hh_box_count) + 1; // Find the lowest value if the array is not empty
+        sort($hh_box_count);
+        $lowest_value = 1;
+        foreach ($hh_box_count as $number) {
+            if ($number == $lowest_value) {
+                $lowest_value++;
+            }
+        }
+        return $lowest_value;
+        
     }
     return $lowest_value;
 }
@@ -471,7 +487,7 @@ function handle_edit_box_submission() {
             if(isset($_POST['delete-box'])) {
                 $current_box = get_post_meta($box_id,'box_number',true);
                 if($current_box != '') {
-                    $hh_box_count = get_option( 'hh_box_count', array() );
+                    $hh_box_count = maybe_unserialize(get_option( 'hh_box_count', array() ));
                     if(($key = array_search($current_box, $hh_box_count)) !== false) {
                         unset($hh_box_count[$key]);
                     }    
@@ -496,7 +512,7 @@ function handle_edit_box_submission() {
                 $current_box = get_post_meta($box_id,'box_number',true);
                 $box_number = sanitize_text_field($_POST['box_number']);
                 if($current_box != $box_number) {
-                    $hh_box_count = get_option( 'hh_box_count', array() );
+                    $hh_box_count = maybe_unserialize(get_option( 'hh_box_count', array() ));
                     if(($key = array_search($current_box, $hh_box_count)) !== false) {
                         unset($hh_box_count[$key]);
                     }    
@@ -504,6 +520,7 @@ function handle_edit_box_submission() {
                         $box_number = get_next_box_number();
                         $errors[] = 'The box number you specified is not available. You have been assigned a new box number but can edit your box to set a new number.';
                     }
+                    $hh_box_count[] = $box_number;
                     update_option('hh_box_count',$hh_box_count);
                 }
 

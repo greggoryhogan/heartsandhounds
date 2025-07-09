@@ -269,6 +269,12 @@ function translate_text($translated_text) {
 	if ( $translated_text === '%1$s response to %2$s' ) {
         return '%1$s tail wag %2$s';
     }
+	if($translated_text === 'From your account dashboard you can view your <a href="%1$s">recent orders</a>, manage your <a href="%2$s">billing address</a>, and <a href="%3$s">edit your password and account details</a>.') {
+		return 'From your account dashboard you can manage your <a href="'.trailingslashit(get_bloginfo('url')).'my-account/treat-boxes/">treat boxes</a>, view your <a href="%1$s">recent orders</a>, manage your <a href="%2$s">billing address</a>, and <a href="%3$s">edit your password and account details</a>.';
+	}
+	if($translated_text == 'From your account dashboard you can view your <a href="%1$s">recent orders</a>, manage your <a href="%2$s">shipping and billing addresses</a>, and <a href="%3$s">edit your password and account details</a>.') {
+		return 'From your account dashboard you can manage your <a href="'.trailingslashit(get_bloginfo('url')).'my-account/treat-boxes/">treat boxes</a>, view your <a href="%1$s">recent orders</a>, manage your <a href="%2$s">shipping and billing addresses</a>, and <a href="%3$s">edit your password and account details</a>.';
+	}
 	return $translated_text;
 }
 
@@ -368,45 +374,3 @@ function hearts_and_hounds_comment_field_descriptions( $fields ) {
 }
 add_filter( 'comment_form_fields', 'hearts_and_hounds_comment_field_descriptions' );
 
-add_filter('template_redirect',function() {
-	if ( is_404() ) {
-		global $wp_query;
-		if(is_array($wp_query->query)) {
-			if(isset($wp_query->query['name'])) {
-				$path = str_replace('box','',str_replace('box-', '',sanitize_text_field( $wp_query->query['name'] )));
-				$query = new WP_Query( array(
-					'post_type' => 'post',
-					'meta_query' => array(
-						array(
-							'key' => 'box_number',
-							'value' => $path,
-							'compare' => '='
-						)
-					)
-				));
-				if($query->have_posts()) {
-					 while($query->have_posts()) {
-						$query->the_post();
-						wp_redirect(get_permalink(get_the_ID()));
-						exit;
-					 }
-				}
-
-			}
-		}
-		/*$posts = get_posts(
-			array(
-				'post_type'              => 'post',
-				'title'                  => 'Sample Page',
-				'post_status'            => 'all',
-				'numberposts'            => 1,
-				'update_post_term_cache' => false,
-				'update_post_meta_cache' => false,           
-				'orderby'                => 'post_date ID',
-				'order'                  => 'ASC',
-			)
-		);*/
-
-		
-	}
-});
