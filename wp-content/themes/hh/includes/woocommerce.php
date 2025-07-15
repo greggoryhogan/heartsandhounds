@@ -783,3 +783,5 @@ function add_views_award($post_id) {
     }
     update_post_meta($post_id,'treatbox_awards',$awards);
 }
+
+add_filter('pvc_enqueue_styles','__return_false');
