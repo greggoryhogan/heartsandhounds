@@ -321,7 +321,11 @@ function list_user_boxes() {
                 echo '</div>';
                 //echo '<h5>Visitors</h5>';
                 echo '<div class="ms-3">';
-                    echo $views .' people have visited your treatbox page';
+                    if($views == 1) {
+                        echo $views .' person has visited your treatbox page';
+                    } else {
+                        echo $views .' people have visited your treatbox page';
+                    }
                     $shelters = get_post_meta( get_the_ID(), 'shelters', true );
                     $shelter_output = array();
                     $total_shelter_visits = 0;
@@ -336,7 +340,11 @@ function list_user_boxes() {
                                 if(isset($link_counts[$shelter_link])) {
                                     $count = $link_counts[$shelter_link];
                                 }
-                                $shelter_output[] = '<div>'.$count .' people have visited '.$shelter_name.'</div>';
+                                if($count == 1) {
+                                    $shelter_output[] = '<div>'.$count .' person has visited '.$shelter_name.'</div>';
+                                } else {
+                                    $shelter_output[] = '<div>'.$count .' people have visited '.$shelter_name.'</div>';
+                                }
                                 $total_shelter_visits += $count;
                             }
                         }
