@@ -259,3 +259,15 @@ input[type="submit"],
   font-size: .9em;
   font-style: italic;
 }
+.wp-block-image {
+  @media (max-width: 576px) {
+    .alignright {
+      float: none!important;
+      margin: 0!important;
+      width: 100%!important;
+    }
+    img {
+      width: 100%!important;
+    }
+  }
+}
