@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitfcade2ec2dd476d106b15b7e32a2408c
+class ComposerStaticInit1e1b28dee0e948121aaebf0eab65f140
 {
     public static $files = array (
         'da5f6548f070d3d306f90eee42dd5de6' => __DIR__ . '/..' . '/donatj/phpuseragentparser/src/UserAgentParser.php',
@@ -191,6 +191,7 @@ class ComposerStaticInitfcade2ec2dd476d106b15b7e32a2408c
         'RankMath\\Helpers\\Options' => __DIR__ . '/../..' . '/includes/helpers/class-options.php',
         'RankMath\\Helpers\\Param' => __DIR__ . '/../..' . '/includes/helpers/class-param.php',
         'RankMath\\Helpers\\Post_Type' => __DIR__ . '/../..' . '/includes/helpers/class-post-type.php',
+        'RankMath\\Helpers\\Schedule' => __DIR__ . '/../..' . '/includes/helpers/class-schedule.php',
         'RankMath\\Helpers\\Schema' => __DIR__ . '/../..' . '/includes/helpers/class-schema.php',
         'RankMath\\Helpers\\Security' => __DIR__ . '/../..' . '/includes/helpers/class-security.php',
         'RankMath\\Helpers\\Sitepress' => __DIR__ . '/../..' . '/includes/helpers/class-sitepress.php',
@@ -270,6 +271,7 @@ class ComposerStaticInitfcade2ec2dd476d106b15b7e32a2408c
         'RankMath\\Rest\\Post' => __DIR__ . '/../..' . '/includes/rest/class-post.php',
         'RankMath\\Rest\\Rest_Helper' => __DIR__ . '/../..' . '/includes/rest/class-rest-helper.php',
         'RankMath\\Rest\\Sanitize' => __DIR__ . '/../..' . '/includes/rest/class-sanitize.php',
+        'RankMath\\Rest\\Setup_Wizard' => __DIR__ . '/../..' . '/includes/rest/class-setup-wizard.php',
         'RankMath\\Rest\\Shared' => __DIR__ . '/../..' . '/includes/rest/class-shared.php',
         'RankMath\\Rewrite' => __DIR__ . '/../..' . '/includes/class-rewrite.php',
         'RankMath\\Robots_Txt' => __DIR__ . '/../..' . '/includes/modules/robots-txt/class-robots-txt.php',
@@ -394,9 +396,9 @@ class ComposerStaticInitfcade2ec2dd476d106b15b7e32a2408c
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitfcade2ec2dd476d106b15b7e32a2408c::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitfcade2ec2dd476d106b15b7e32a2408c::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitfcade2ec2dd476d106b15b7e32a2408c::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit1e1b28dee0e948121aaebf0eab65f140::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit1e1b28dee0e948121aaebf0eab65f140::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit1e1b28dee0e948121aaebf0eab65f140::$classMap;
 
         }, null, ClassLoader::class);
     }

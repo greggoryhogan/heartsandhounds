@@ -409,7 +409,9 @@ class WC_Helper_Updater {
 		$payload = array();
 
 		// Scan subscriptions.
-		foreach ( WC_Helper::get_subscriptions() as $subscription ) {
+		$subscriptions = WC_Helper::get_subscriptions();
+
+		foreach ( $subscriptions as $subscription ) {
 			$payload[ $subscription['product_id'] ] = array(
 				'product_id' => $subscription['product_id'],
 				'file_id'    => '',
@@ -443,7 +445,9 @@ class WC_Helper_Updater {
 		$payload = array();
 
 		// Scan subscriptions.
-		foreach ( WC_Helper::get_subscriptions() as $subscription ) {
+		$subscriptions = WC_Helper::get_subscriptions();
+
+		foreach ( $subscriptions as $subscription ) {
 			$payload[ $subscription['product_id'] ] = array(
 				'product_id' => $subscription['product_id'],
 				'file_id'    => '',
