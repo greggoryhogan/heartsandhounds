@@ -86,6 +86,14 @@ input[type="submit"],
       background: $dark-brown!important;
     }
   }
+  &.button-white {
+    background: #fff!important;
+    color: $dark-brown!important;
+    &:hover {
+      background: $dark-brown!important;
+      color: #fff!important;  
+    }
+  }
 }
 .remove-shelter {
   float: right;

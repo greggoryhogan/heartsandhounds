@@ -42,7 +42,7 @@ echo '<div class="bg-brown pt-md-5 pb-md-5 pb-2 pt-3">';
 				
 				echo '<h2>Each treat box is more than a snack stop—<br>it&rsquo;s a story station.</h2>';
 				echo '<p>Alongside the biscuits and bones, you&rsquo;ll find information about donation pages, adoption listings, and local shelters in need. Our goal is to make helping shelter dogs as easy as grabbing a treat for your own. Whether you donate, share, or simply take a moment to learn about the dogs featured, every act of kindness helps.</p>';
-
+				echo '<a href="'.get_bloginfo('url').'/treat-box-list" title="View all treat boxes" class="button button-large button-white">Explore The Treat Boxes</a>';
 				//echo '<h2>Not everyone can adopt, but everyone can care.</h2>';
 				//echo '<p>We believe awareness creates change. By placing our treat boxes in everyday places—front yards, parks, sidewalks—we keep the conversation going. Shelter dogs are not forgotten; they&rsquo;re part of the community, too. Our boxes invite neighbors to think about rescue in a low-pressure, feel-good way.</p>';
 

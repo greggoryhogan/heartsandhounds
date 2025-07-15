@@ -795,7 +795,6 @@ add_shortcode('active_treatboxes', function() {
     $the_query = new WP_Query($args);
     $return = '';
     if ($the_query->have_posts()) :
-        $return .= '<h2 class="pt-4 pb-2 mb-4 m-0 border-bottom text-center">Current Treat Boxes</h2>';
         $return .= '<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 mb-4">';
         while ($the_query->have_posts()): $the_query->the_post();
             $return .= '<div class="mb-4">';
