@@ -18,7 +18,9 @@ function register_hh_scripts() {
 	wp_enqueue_script( 'hh-main', $hh_dir.'/assets/js/main.js', array('jquery'), $version, true);
 	wp_localize_script( 'hh-main', 'hh_main', array(
 		'ajax_url' => admin_url( 'admin-ajax.php' ),
-		'current_user_id' => get_current_user_id()
+		'current_user_id' => get_current_user_id(),
+		'post_id' => get_the_ID(),
+		'user_id' => get_current_user_id(),
 	) );
 	wp_enqueue_script( 'henry-bootstrap', HH_URL.'/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js', array(), '5.2', true );
 	if ( is_account_page() ) {

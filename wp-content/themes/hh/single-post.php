@@ -15,7 +15,7 @@ if ( have_posts() ) {
 				$shelter_name = esc_html( $shelter['name'] );
 				$shelter_link = esc_url( $shelter['link'] );
 				if($shelter_link != '' && $shelter_name != '') {
-					$shelter_output[] = '<a href="' . $shelter_link . '" target="_blank" class="button me-2">' . $shelter_name . '&nbsp;&nbsp;&rarr;</a>';
+					$shelter_output[] = '<a href="' . $shelter_link . '" target="_blank" class="button me-2 shelter-link">' . $shelter_name . '&nbsp;&nbsp;&rarr;</a>';
 				}
 			}
 		}
@@ -33,7 +33,44 @@ if ( have_posts() ) {
 						if(!empty($shelter_output)) {
 							echo '<h3 class="mb-0 pt-1 mt-0">Shelters we support:</h3>';
 							echo '<div class="d-flex flex-wrap">'.implode(' ',$shelter_output).'</div>';
-						
+						}
+						//awards
+						$awards = maybe_unserialize(get_post_meta($post_id,'treatbox_awards',true));
+						//print_r($awards);
+						if(!is_array($awards)) {
+							$awards = array();
+						}				
+						if(!empty($awards)) {
+							echo '<div class="d-flex flex-wrap treatbox-page-awards mt-4">';
+								//foreach($awards as $award) {
+								$counts = array(500, 100, 50, 25, 10);
+								foreach($counts as $count) {
+									if(isset($awards[$count.'_page_visits'])) {
+										echo '<div class="d-flex align-items-center text-center award-container w-100">';
+											echo '<div class="award tan">'.$count.'</div>';
+											echo '<div class="award-text tan">'.$count.'+ Treat Box Visits</div>';
+											/*if(absint($awards[$count.'_page_visits']) > 1) {
+												echo '<div class="award-count"> <span class="x">x</span> '.$awards[$count.'_page_visits'].'</div>';
+											}*/
+											
+										echo '</div>';
+										break;
+									}
+								}
+								foreach($counts as $count) {
+									if(isset($awards[$count.'_shelter_visits'])) {
+										echo '<div class="d-flex align-items-center text-center award-container w-100">';
+											echo '<div class="award red">'.$count.'</div>';
+											echo '<div class="award-text red">'.$count.'+ Shelter Visits</div>';
+											/*if(absint($awards[$count.'_shelter_visits']) > 1) {
+												echo '<div class="award-count"> <span class="x">x</span> '.$awards[$count.'_shelter_visits'].'</div>';
+											}*/
+											
+										echo '</div>';
+										break;
+									}
+								}
+							echo '</div>';
 						}
 					echo '</div>';	
 				echo '</div>';	

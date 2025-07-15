@@ -10,7 +10,7 @@ body {
   background: #c97c36;
   color: #fff;
 }
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6,.treatbox-link {
     font-family: 'TargetBook';
     text-transform: uppercase;
 }
@@ -190,6 +190,67 @@ input[type="submit"],
         border-radius: 5px;
         border: 1px solid $dark-brown;
         padding: 5px;
+      }
+    }
+  }
+}
+.treatbox-link {
+  color: $dark-brown!important;
+  background: #fff!important;
+  font-size: .9em;
+  &:hover {
+    color: #fff!important;
+    background-color: $dark-brown!important;
+  }
+}
+.treatbox-page-awards {
+  font-family: 'TargetBook';
+  text-transform: uppercase;
+  font-size: 1.1rem;
+  .award-container {
+    gap: 8px;
+    .award-text {
+      color: $red;
+      &.brown {
+        color: $dark-brown;
+      }
+      &.tan {
+        color: $brown;
+      }
+      &.red {
+        color: $red;
+      }
+    }
+    .award {
+      width: 45px;
+      border-radius: 50%;
+      aspect-ratio: 1;
+      background: #fff;
+      border: 3px solid #531a21;
+      padding: 5px;
+      font-size: 2.5rem;
+      line-height: 1.7rem;
+      margin-bottom: 5px;
+      letter-spacing: -2px;
+      background: url('../img/hound.png');
+      background-size: 110%;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: transparent;
+      &.tan {
+        border-color: $brown;
+      }
+      &.red {
+        border-color: $red;
+      }
+      &.brown {
+        border-color: $dark-brown;
+      }
+    }
+    .award-count {
+      margin-top: -5px;
+      .x {
+        font-size: .6rem;
       }
     }
   }

@@ -30,7 +30,27 @@
           collapse.hide();
           $( "#menu" ).prop( "checked", false );
         }
-      });
+    });
+
+    $(document).on('click','.shelter-link',function(e) {
+      var link = $(this).attr('href');
+      $.ajax({
+            url: hh_main.ajax_url,
+            method: 'POST',
+            data: {
+                action: 'update_treatbox_link_count',
+                link : link,
+                post_id : hh_main.post_id,
+                user_id : hh_main.user_id
+            },
+            success: (response) => {
+                
+            },
+            error: (response)=>{
+        
+            }
+        });
+    });
 
     //get current user id
     //hh_main.current_user_id

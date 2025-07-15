@@ -292,7 +292,9 @@ function list_user_boxes() {
         'post_type'      => 'post',           // Your custom post type
         'posts_per_page' => -1,              // Get all posts
         'post_status'    => 'publish',       // Only published posts
-        'author'         => $user_id,        // Filter by the current user
+        'author'         => $user_id, 
+        'orderby' => 'id',
+        'order' => 'asc'       // Filter by the current user
     );
 
     // The Query
@@ -300,14 +302,59 @@ function list_user_boxes() {
 
     // Check if there are any posts
     if ( $query->have_posts() ) {
-        echo '<ul>';
+        echo '<div class="mb-1">';
         while ( $query->have_posts() ) {
             $query->the_post();
-            echo '<li class="mb-2">';
-            echo '<a href="' . esc_url( wc_get_account_endpoint_url( 'treat-boxes' ) . 'edit/' . get_the_ID() ) . '">' . get_the_title() . '</a>';
-            echo '</li>';
+            $box_id = get_the_ID();
+            //echo '<li class="mb-2">';
+            $views = 0;
+            if(function_exists('pvc_get_post_views')) {
+                $views = pvc_get_post_views($box_id);
+            }
+            echo '<div class="bg-brown pt-3 pb-3 ps-3 pe-3 rounded mb-3">';
+                echo '<div class="d-flex flex-column flex-sm-row justify-content-between mb-2 mb-md-1">';
+                    echo '<h4 class="mt-0 mb-0 me-2"><a href="' . esc_url( wc_get_account_endpoint_url( 'treat-boxes' ) . 'edit/' . $box_id ) . '" class="text-white text-decoration-none">' . get_the_title() . '</a></h4>';
+                    echo '<div class="d-flex">';
+                        echo '<a href="' . esc_url( wc_get_account_endpoint_url( 'treat-boxes' ) . 'edit/' . $box_id ) . '" class="rounded ps-2 pe-2 pt-1 pb-1 text-decoration-none treatbox-link me-2">Edit</a>';
+                        echo '<a href="' . get_permalink( $box_id ) . '" class="rounded ps-2 pe-2 pt-1 pb-1 text-decoration-none treatbox-link">Visit</a>';
+                    echo '</div>';
+                echo '</div>';
+                //echo '<h5>Visitors</h5>';
+                echo '<div class="ms-3">';
+                    echo $views .' people have visited your treatbox page';
+                    $shelters = get_post_meta( get_the_ID(), 'shelters', true );
+                    $shelter_output = array();
+                    $total_shelter_visits = 0;
+                    if ( ! empty( $shelters ) && is_array( $shelters ) ) {
+                        $link_counts = maybe_unserialize(get_post_meta($box_id, 'treatbox_link_counts',true));
+                        foreach ( $shelters as $shelter ) {
+                            // Display shelter name and link (if available)
+                            $shelter_name = esc_html( $shelter['name'] );
+                            $shelter_link = sanitize_url( $shelter['link'] );
+                            if($shelter_link != '' && $shelter_name != '') {
+                                $count = 0;
+                                if(isset($link_counts[$shelter_link])) {
+                                    $count = $link_counts[$shelter_link];
+                                }
+                                $shelter_output[] = '<div>'.$count .' people have visited '.$shelter_name.'</div>';
+                                $total_shelter_visits += $count;
+                            }
+                        }
+                    }
+                    if(!empty($shelter_output)) {
+                        
+                            echo implode('',$shelter_output);
+                            if($total_shelter_visits > 0) {
+                                echo '<div class="mt-1">You&rsquo;re making a difference, great job!</div>';
+                            }
+                        
+                    }
+                echo '</div>';
+            echo '</div>';
+            
+            //echo '</li>';
         }
-        echo '</ul>';
+        echo '</div>';
     } else {
         echo '<p>You have not created any boxes yet.</p>';
     }
@@ -624,4 +671,107 @@ function get_cart_total() {
         $cart_count = is_object( WC()->cart ) ? WC()->cart->get_cart_contents_count() : '';
     }
     wp_send_json(array('cart_count' => $cart_count));
+}
+
+add_action('wp_ajax_update_treatbox_link_count', 'update_link_count');
+add_action('wp_ajax_nopriv_update_treatbox_link_count', 'update_link_count');
+function update_link_count() {
+    $box_id = absint($_POST['post_id']);
+    $user_id = absint($_POST['user_id']);
+    $author = get_post_field( 'post_author', $box_id );
+    //skip for people visiting their own pages
+    if($author != $user_id) {
+        $link = sanitize_url( $_POST['link'] );
+        //delete_post_meta($box_id, 'treatbox_link_counts'); //for testing
+        $link_counts = maybe_unserialize(get_post_meta($box_id, 'treatbox_link_counts', true));
+        if(!is_array($link_counts)) {
+            $link_counts = array();
+        }
+        if(!isset($link_counts[$link])) {
+            $link_counts[$link] = 0;
+        }
+        $link_counts[$link] += 1;
+        update_post_meta($box_id,'treatbox_link_counts',$link_counts);
+
+        //awards
+        $awards = maybe_unserialize(get_post_meta($box_id,'treatbox_awards',true));
+        if(!is_array($awards)) {
+            $awards = array();
+        }
+
+        if($link_counts[$link] == 10) {
+            if(!isset($awards['10_shelter_visits'])) {
+                $awards['10_shelter_visits'] = 0;
+            }
+            $awards['10_shelter_visits'] += 1;
+        } else if($link_counts[$link] == 25) {
+            if(!isset($awards['25_shelter_visits'])) {
+                $awards['25_shelter_visits'] = 0;
+            }
+            $awards['25_shelter_visits'] += 1;
+        } else if($link_counts[$link] == 50) {
+            if(!isset($awards['50_shelter_visits'])) {
+                $awards['50_shelter_visits'] = 0;
+            }
+            $awards['50_shelter_visits'] += 1;
+        } else if($link_counts[$link] == 100) {
+            if(!isset($awards['100_shelter_visits'])) {
+                $awards['100_shelter_visits'] = 0;
+            }
+            $awards['100_shelter_visits'] += 1;
+        }
+        update_post_meta($box_id,'treatbox_awards',$awards);
+    }
+    wp_die();
+}
+
+//stop authors from incrementing their own post views
+add_filter('pvc_run_check_post', 'dont_update_viewcount_for_own_authors', 10, 2);
+function dont_update_viewcount_for_own_authors($run, $post_id) {
+    $user_id = get_current_user_id();
+    $author = get_post_field( 'post_author', $post_id );
+    if($author == $user_id) {
+        $run = false;
+    }
+    return $run;
+}
+
+add_action('pvc_after_count_visit','add_views_award', 10, 1);
+function add_views_award($post_id) {
+    //awards
+    $awards = maybe_unserialize(get_post_meta($post_id,'treatbox_awards',true));
+    if(!is_array($awards)) {
+        $awards = array();
+    }
+    $views = 0;
+    if(function_exists('pvc_get_post_views')) {
+        $views = pvc_get_post_views($post_id);
+    }
+    if($views == 10) {
+        if(!isset($awards['10_page_visits'])) {
+            $awards['10_page_visits'] = 0;
+        }
+        $awards['10_page_visits'] += 1;
+    } else if($views == 25) {
+        if(!isset($awards['25_page_visits'])) {
+            $awards['25_page_visits'] = 0;
+        }
+        $awards['25_page_visits'] += 1;
+    } else if($views == 50) {
+        if(!isset($awards['50_page_visits'])) {
+            $awards['50_page_visits'] = 0;
+        }
+        $awards['50_page_visits'] += 1;
+    } else if($views == 100) {
+        if(!isset($awards['100_page_visits'])) {
+            $awards['100_page_visits'] = 0;
+        }
+        $awards['100_page_visits'] += 1;
+    } else if($views == 500) {
+        if(!isset($awards['500_page_visits'])) {
+            $awards['500_page_visits'] = 0;
+        }
+        $awards['500_page_visits'] += 1;
+    }
+    update_post_meta($post_id,'treatbox_awards',$awards);
 }
