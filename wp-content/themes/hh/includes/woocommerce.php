@@ -314,7 +314,7 @@ function list_user_boxes() {
             echo '<div class="bg-brown pt-3 pb-3 ps-3 pe-3 rounded mb-3">';
                 echo '<div class="d-flex flex-column flex-sm-row justify-content-between mb-2 mb-md-1">';
                     echo '<h4 class="mt-0 mb-0 me-2"><a href="' . esc_url( wc_get_account_endpoint_url( 'treat-boxes' ) . 'edit/' . $box_id ) . '" class="text-white text-decoration-none">' . get_the_title() . '</a></h4>';
-                    echo '<div class="d-flex">';
+                    echo '<div class="d-flex mt-1 mt-sm-0">';
                         echo '<a href="' . esc_url( wc_get_account_endpoint_url( 'treat-boxes' ) . 'edit/' . $box_id ) . '" class="rounded ps-2 pe-2 pt-1 pb-1 text-decoration-none treatbox-link me-2">Edit</a>';
                         echo '<a href="' . get_permalink( $box_id ) . '" class="rounded ps-2 pe-2 pt-1 pb-1 text-decoration-none treatbox-link">Visit</a>';
                     echo '</div>';
