@@ -785,3 +785,42 @@ function add_views_award($post_id) {
 }
 
 add_filter('pvc_enqueue_styles','__return_false');
+
+add_shortcode('active_treatboxes', function() {
+    $args = array(
+        'posts_per_page' => -1,
+        'orderby' => 'title',
+        'order' => 'ASC',
+    );
+    $the_query = new WP_Query($args);
+    $return = '';
+    if ($the_query->have_posts()) :
+        $return .= '<h2 class="pt-4 pb-2 mb-4 m-0 border-bottom text-center">Current Treat Boxes</h2>';
+        $return .= '<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 mb-4">';
+        while ($the_query->have_posts()): $the_query->the_post();
+            $return .= '<div class="mb-4">';
+                $return .= '<div class="bg-brown pt-3 pb-3 ps-3 pe-3 rounded h-100">';
+                    $post_id = get_the_ID();
+                    $return .= '<h3 class="h5 pt-0 pb-1 mt-0 mb-1 m-0 border-bottom border-white">'.get_the_title().'&rsquo;s Box</h3>';
+                    $box = get_post_meta($post_id,'box_number',true);
+                    $location = get_post_meta($post_id,'location',true);	
+                    $return .= '<h4 class=" h5 pt-0 mb-0">Box #'.$box.'</h2>';      
+                    if($location != '') {
+                        $return .= '<h6 class="h6 mb-0 pt-1 mt-0">'.$location.'</h3>';
+                    }
+                    $return .= '<div class="mt-3">';
+                        $return .= '<a href="'.get_permalink().'" title="'.get_the_title().'" class="rounded ps-2 pe-2 pt-1 pb-1 text-decoration-none treatbox-link me-2">Visit</a>';
+                    $return .= '</div>';
+                $return .= '</div>';
+            $return .= '</div>';
+        endwhile; 
+        $return .= '</div>';
+        wp_reset_postdata();
+    endif;
+
+    $return .= '<div class="d-block d-md-nones bg-white p-3 rounded  pt-3 mb-2">';
+        $return .= '<p class="mb-0 p-0"><strong>Do you have a treat box?</strong> Sign up for a free Hearts &amp; Hounds account to support your local shelter too!</p>';
+        $return .= '<a href="' . trailingslashit(get_bloginfo('url')) . 'my-account/" class="button me-2">Register or Sign Up</a>';
+    $return .= '</div>';
+    return $return;
+});
