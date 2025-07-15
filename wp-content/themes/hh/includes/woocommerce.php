@@ -322,9 +322,9 @@ function list_user_boxes() {
                 //echo '<h5>Visitors</h5>';
                 echo '<div class="ms-3">';
                     if($views == 1) {
-                        echo $views .' person has visited your treatbox page';
+                        echo $views .' person has visited your treat box page';
                     } else {
-                        echo $views .' people have visited your treatbox page';
+                        echo $views .' people have visited your treat box page';
                     }
                     $shelters = get_post_meta( get_the_ID(), 'shelters', true );
                     $shelter_output = array();
