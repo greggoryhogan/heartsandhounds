@@ -684,14 +684,15 @@ function get_cart_total() {
 add_action('wp_ajax_update_treatbox_link_count', 'update_link_count');
 add_action('wp_ajax_nopriv_update_treatbox_link_count', 'update_link_count');
 function update_link_count() {
-    $box_id = absint($_POST['post_id']);
+    $post_id = absint($_POST['post_id']);
     $user_id = absint($_POST['user_id']);
-    $author = get_post_field( 'post_author', $box_id );
+    $author = get_post_field( 'post_author', $post_id );
     //skip for people visiting their own pages
     if($author != $user_id) {
         $link = sanitize_url( $_POST['link'] );
-        //delete_post_meta($box_id, 'treatbox_link_counts'); //for testing
-        $link_counts = maybe_unserialize(get_post_meta($box_id, 'treatbox_link_counts', true));
+        $shelter = trim(sanitize_text_field( stripslashes( $_POST['shelter'] ) ));
+        //delete_post_meta($post_id, 'treatbox_link_counts'); //for testing
+        $link_counts = maybe_unserialize(get_post_meta($post_id, 'treatbox_link_counts', true));
         if(!is_array($link_counts)) {
             $link_counts = array();
         }
@@ -699,36 +700,46 @@ function update_link_count() {
             $link_counts[$link] = 0;
         }
         $link_counts[$link] += 1;
-        update_post_meta($box_id,'treatbox_link_counts',$link_counts);
+        update_post_meta($post_id,'treatbox_link_counts',$link_counts);
 
         //awards
-        $awards = maybe_unserialize(get_post_meta($box_id,'treatbox_awards',true));
+        $awards = maybe_unserialize(get_post_meta($post_id,'treatbox_awards',true));
         if(!is_array($awards)) {
             $awards = array();
         }
 
-        if($link_counts[$link] == 10) {
+        if($link_counts[$link] == 1) {
+            if(!isset($awards['1_shelter_visits'])) {
+                $awards['1_shelter_visits'] = 0;
+            }
+            $awards['1_shelter_visits'] += 1;
+            trigger_reward($post_id, 'shelter_visits', 1, array('shelter' => $shelter));
+        } else if($link_counts[$link] == 10) {
             if(!isset($awards['10_shelter_visits'])) {
                 $awards['10_shelter_visits'] = 0;
             }
             $awards['10_shelter_visits'] += 1;
+            trigger_reward($post_id, 'shelter_visits', 10, array('shelter' => $shelter));
         } else if($link_counts[$link] == 25) {
             if(!isset($awards['25_shelter_visits'])) {
                 $awards['25_shelter_visits'] = 0;
             }
             $awards['25_shelter_visits'] += 1;
+            trigger_reward($post_id, 'shelter_visits', 25, array('shelter' => $shelter));
         } else if($link_counts[$link] == 50) {
             if(!isset($awards['50_shelter_visits'])) {
                 $awards['50_shelter_visits'] = 0;
             }
             $awards['50_shelter_visits'] += 1;
+            trigger_reward($post_id, 'shelter_visits', 50, array('shelter' => $shelter));
         } else if($link_counts[$link] == 100) {
             if(!isset($awards['100_shelter_visits'])) {
                 $awards['100_shelter_visits'] = 0;
             }
             $awards['100_shelter_visits'] += 1;
+            trigger_reward($post_id, 'shelter_visits', 100, array('shelter' => $shelter));
         }
-        update_post_meta($box_id,'treatbox_awards',$awards);
+        update_post_meta($post_id,'treatbox_awards',$awards);
     }
     wp_die();
 }
@@ -755,31 +766,42 @@ function add_views_award($post_id) {
     if(function_exists('pvc_get_post_views')) {
         $views = pvc_get_post_views($post_id);
     }
-    if($views == 10) {
+    if($views == 1) {
+        if(!isset($awards['1_page_visits'])) {
+            $awards['1_page_visits'] = 0;
+        }
+        $awards['1_page_visits'] += 1;
+        trigger_reward($post_id, 'page_visits', 1);
+    } else if($views == 10) {
         if(!isset($awards['10_page_visits'])) {
             $awards['10_page_visits'] = 0;
         }
         $awards['10_page_visits'] += 1;
+        trigger_reward($post_id, 'page_visits', 10);
     } else if($views == 25) {
         if(!isset($awards['25_page_visits'])) {
             $awards['25_page_visits'] = 0;
         }
         $awards['25_page_visits'] += 1;
+        trigger_reward($post_id, 'page_visits', 25);
     } else if($views == 50) {
         if(!isset($awards['50_page_visits'])) {
             $awards['50_page_visits'] = 0;
         }
         $awards['50_page_visits'] += 1;
+        trigger_reward($post_id, 'page_visits', 50);
     } else if($views == 100) {
         if(!isset($awards['100_page_visits'])) {
             $awards['100_page_visits'] = 0;
         }
         $awards['100_page_visits'] += 1;
+        trigger_reward($post_id, 'page_visits', 100);
     } else if($views == 500) {
         if(!isset($awards['500_page_visits'])) {
             $awards['500_page_visits'] = 0;
         }
         $awards['500_page_visits'] += 1;
+        trigger_reward($post_id, 'page_visits', 500);
     }
     update_post_meta($post_id,'treatbox_awards',$awards);
 }
@@ -823,3 +845,202 @@ add_shortcode('active_treatboxes', function() {
     $return .= '</div>';
     return $return;
 });
+
+//tratbox updates
+add_action( 'woocommerce_edit_account_form', 'hh_add_treat_box_checkbox_to_account' );
+function hh_add_treat_box_checkbox_to_account() {
+    $user_id = get_current_user_id();
+    $checked = get_user_meta( $user_id, 'hh_treat_box_updates', true );
+    ?>
+    <fieldset>
+        <legend>Treat Box Updates</legend>
+        <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+            <label>
+                <input type="checkbox" name="hh_treat_box_updates" value="1" <?php checked( $checked, '1' ); ?> />
+                Send me alerts about badges earned for my treat box page
+            </label>
+        </p>
+    </fieldset>
+    <?php
+}
+add_action( 'woocommerce_save_account_details', 'hh_save_treat_box_checkbox_to_account', 12, 1 );
+function hh_save_treat_box_checkbox_to_account( $user_id ) {
+    $value = isset($_POST['hh_treat_box_updates']) ? '1' : '0';
+    update_user_meta( $user_id, 'hh_treat_box_updates', $value );
+}
+
+//automatically opt in users to notifications
+add_action( 'user_register', 'hh_set_treat_box_updates_on_registration' );
+function hh_set_treat_box_updates_on_registration( $user_id ) {
+    update_user_meta( $user_id, 'hh_treat_box_updates', '1' );
+}
+
+//count comments
+function hh_update_unique_commenter_count( $comment_id ) {
+    $comment = get_comment( $comment_id );
+    $post_id = $comment->comment_post_ID;
+
+    // Only count if comment is approved
+    if ( $comment->comment_approved != '1' ) {
+        return;
+    }
+
+    // Get post author
+    $post_author_id = get_post_field( 'post_author', $post_id );
+
+    // Get all approved comments on this post
+    $args = array(
+        'post_id' => $post_id,
+        'status'  => 'approve',
+        'type'    => 'comment',
+    );
+
+    $comments = get_comments( $args );
+
+    $unique = [];
+
+    foreach ( $comments as $c ) {
+        // Skip comments by the post author (either logged-in or matching email)
+        if (
+            ( $c->user_id && $c->user_id == $post_author_id ) ||
+            ( $c->comment_author_email === get_the_author_meta( 'user_email', $post_author_id ) )
+        ) {
+            continue;
+        }
+
+        // Track by email first, fallback to user_id if available
+        $key = $c->user_id ? 'user_' . $c->user_id : 'email_' . strtolower( trim( $c->comment_author_email ) );
+        $unique[ $key ] = true;
+    }
+
+    $count = count( $unique );
+
+    //update_post_meta( $post_id, 'hh_unique_commenter_count', $count );
+
+    $awards = maybe_unserialize(get_post_meta($post_id,'treatbox_awards',true));
+    if(!is_array($awards)) {
+        $awards = array();
+    }
+    if($count == 1) {
+        if(!isset($awards['1_comments'])) {
+            $awards['1_comments'] = 0;
+        }
+        $awards['1_comments'] += 1;
+        trigger_reward($post_id, 'comments', 1);
+    } else if($count == 10) {
+        if(!isset($awards['10_comments'])) {
+            $awards['10_comments'] = 0;
+        }
+        $awards['10_comments'] += 1;
+        trigger_reward($post_id, 'comments', 10);
+    } else if($count == 25) {
+        if(!isset($awards['25_comments'])) {
+            $awards['25_comments'] = 0;
+        }
+        $awards['25_comments'] += 1;
+        trigger_reward($post_id, 'comments', 25);
+    } else if($count == 50) {
+        if(!isset($awards['50_comments'])) {
+            $awards['50_comments'] = 0;
+        }
+        $awards['50_comments'] += 1;
+        trigger_reward($post_id, 'comments', 50);
+    } else if($count == 100) {
+        if(!isset($awards['100_comments'])) {
+            $awards['100_comments'] = 0;
+        }
+        $awards['100_comments'] += 1;
+        trigger_reward($post_id, 'comments', 100);
+    } else if($count == 500) {
+        if(!isset($awards['500_comments'])) {
+            $awards['500_comments'] = 0;
+        }
+        $awards['500_comments'] += 1;
+        trigger_reward($post_id, 'comments', 500);
+    }
+    update_post_meta($post_id,'treatbox_awards',$awards);
+}
+
+// On new comment that is auto-approved
+add_action( 'comment_post', function( $comment_id, $approved ) {
+    if ( $approved == 1 ) {
+        hh_update_unique_commenter_count( $comment_id );
+    }
+}, 20, 2 );
+
+// On manual approval later
+add_action( 'wp_set_comment_status', function( $comment_id, $status ) {
+    if ( $status === 'approve' ) {
+        hh_update_unique_commenter_count( $comment_id );
+    }
+}, 20, 2 );
+
+function trigger_reward($post_id, $award_type, $award_count, $extra_details = array()) {
+    $author = get_post_field( 'post_author', $post_id );
+    $checked = get_user_meta( $author, 'hh_treat_box_updates', true );
+    if($checked == 1) {
+        $user = get_user_by('id', $author);
+        $link = '<a href="'.get_permalink($post_id).'" title="Visit your treat box page">Visit your treat box page</a>';
+        if($user !== false) {
+            $to = $user->user_email;
+            switch($award_type) {
+                case 'comments':
+                    if($award_count == 1) {
+                        $subject = 'Your got your first comment at your treat box!';
+                        $message = '<p>Your treat box page just got it&rsquo;s first comment, great job!</p>';
+                        $message .= $link.' to view your reward. While you&rsquo;re there, you can respond to the commend.';
+                        $message .= ' Generating more comments will get people involved with your treat box and drive more clicks to the shelters you support.</p>';
+                    } else {
+                        $subject = 'People are getting chatty at your treat box!';
+                        $message = '<p>Your treat box page just passed '.$award_count.' comments, great job!</p>';
+                        $message .= $link.' to view your reward. While you&rsquo;re there, you can respond to any open comments.';
+                        $message .= ' Someone took the time out of the day to let you know how much they care, why not return the favor?</p>';
+                    }
+                    break;
+                case 'shelter_visits':
+                    if($award_count == 1) {
+                        $subject = 'You just sent your first visitor to a shelter!';
+                        if(isset($extra_details['shelter'])) {
+                            $message = '<p>Someone just clicked off your treat box page to learn more about &ldquo;'.$extra_details['shelter'].'&rdquo;, great job!</p>';
+                        } else {
+                            $message = '<p>Someone just clicked off your treat box page to learn more about one of your shelters, great job!</p>';
+                        }
+                    } else {
+                        $subject = 'You&rsquo;re sending a lot of traffic to your shelter!';
+                        if(isset($extra_details['shelter'])) {
+                            $message = '<p>Your shelter &ldquo;'.$extra_details['shelter'].'&rdquo; just passed '.$award_count.' clicks, great job!</p>';
+                        } else {
+                            $message = '<p>One of your shelters just passed '.$award_count.' clicks, great job!</p>';
+                        }
+                    }
+                
+                    $message .= '<p>Animal shelters need all the support we can give them, and you&rsquo;re definitely doing your part! ';
+                    $message .= $link.' to view your reward. While you&rsquo;re there, you can post an update to your treat box visitors about all the good your box is doing.</p>';
+                    break;
+                case 'page_visits':
+                    if($award_count == 1) {
+                        $subject = 'You just got your first visitor to your treat box page!';
+                        $message = '<p>Someone just visited your treat box page, great job!</p>';
+                        $message .= '<p>'.$link.' to view your reward. Don&rsquo;t forget to stock your treat box, you&rsquo;re in for more visitors to come!</p>';
+                    } else {
+                        $subject = 'Your treat box is getting hot!';
+                        $message = '<p>Your treat box page just passed '.$award_count.' visits, great job!</p>';
+                        $message .= '<p>'.$link.' to view your reward. If you know someone who may also like a treat box, why not pass along a link while you&rsquo;re at it?</p>';
+                    }
+                    break;
+            }
+            $message .= '<p>Together, small moments like these make a big difference. We&rsquo;re so glad you&rsquo;re here to be part of it,</p><p>Hearts &amp; Hounds</p>';
+
+            $message .= '<p>&nbsp;</p><p><em>To stop receiving treat box notifications, <a href="'.trailingslashit(get_bloginfo('url')).'my-account/edit-account/" title="Update Account">edit your account details</a> and unsubscribe from treat box updates.</p>';
+        }
+
+        send_woo_email( $to, $subject, $message );
+    }
+}
+
+function send_woo_email( $to, $subject, $message, $headers = "Content-Type: text/html\r\n", $attachments = "" ) {
+	if( ! class_exists( 'WC_Emails' ) ) { include_once WC_ABSPATH . 'includes/class-wc-emails.php'; }
+	$mailer  = WC()->mailer();
+	$message = $mailer->wrap_message( $subject, $message );
+	return $mailer->send( $to, $subject, $message, $headers, $attachments );
+}

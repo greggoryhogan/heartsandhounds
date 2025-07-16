@@ -34,12 +34,14 @@
 
     $(document).on('click','.shelter-link',function(e) {
       var link = $(this).attr('href');
+      var shelter = $(this).text();
       $.ajax({
             url: hh_main.ajax_url,
             method: 'POST',
             data: {
                 action: 'update_treatbox_link_count',
                 link : link,
+                shelter : shelter,
                 post_id : hh_main.post_id,
                 user_id : hh_main.user_id
             },

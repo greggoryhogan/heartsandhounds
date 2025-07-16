@@ -217,6 +217,7 @@ input[type="submit"],
   font-size: 1.1rem;
   .award-container {
     gap: 8px;
+    margin-bottom: 5px;
     .award-text {
       color: $red;
       &.brown {
@@ -228,18 +229,23 @@ input[type="submit"],
       &.red {
         color: $red;
       }
+      /*.count {
+        min-width: 25px;
+        display: inline-block;
+        text-align: left;
+      }*/
     }
     .award {
       width: 45px;
+      border: 3px solid;
+      @media (max-width: 576px) {
+        width: 25px;
+        border-width: 2px;
+      }
       border-radius: 50%;
       aspect-ratio: 1;
       background: #fff;
-      border: 3px solid #531a21;
       padding: 5px;
-      font-size: 2.5rem;
-      line-height: 1.7rem;
-      margin-bottom: 5px;
-      letter-spacing: -2px;
       background: url('../img/hound.png');
       background-size: 110%;
       background-position: center;
@@ -277,5 +283,11 @@ input[type="submit"],
     img {
       width: 100%!important;
     }
+  }
+}
+.shelter-link {
+  &:after {
+    content: '→';
+    padding-left: 10px;
   }
 }
