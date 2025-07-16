@@ -1045,3 +1045,18 @@ function send_woo_email( $to, $subject, $message, $headers = "Content-Type: text
 	$message = $mailer->wrap_message( $subject, $message );
 	return $mailer->send( $to, $subject, $message, $headers, $attachments );
 }
+
+add_filter( 'comment_form_logged_in', 'hh_custom_comment_logged_in_message', 20, 2 );
+function hh_custom_comment_logged_in_message( $logged_in_as, $commenter ) {
+    $user = wp_get_current_user();
+    $profile_url = esc_url( wc_get_account_endpoint_url( 'edit-account' ) );
+    $logout_url = esc_url( wp_logout_url( apply_filters( 'woocommerce_logout_redirect', wc_get_page_permalink( 'myaccount' ) ) ) );
+    $user_name = esc_html( $user->display_name );
+
+    return sprintf(
+        __('Logged in as %1$s. <a href="%2$s">Edit your profile</a>. <a href="%3$s">Log out?</a>', 'woocommerce'),
+        $user_name,
+        $profile_url,
+        $logout_url
+    );
+}
