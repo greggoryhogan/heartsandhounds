@@ -1054,7 +1054,7 @@ function hh_custom_comment_logged_in_message( $logged_in_as, $commenter ) {
     $user_name = esc_html( $user->display_name );
 
     return sprintf(
-        __('Logged in as %1$s. <a href="%2$s">Edit your profile</a>. <a href="%3$s">Log out?</a>', 'woocommerce'),
+        __('<p class="logged-in-as">Logged in as %1$s. <a href="%2$s">Edit your profile</a>. <a href="%3$s">Log out?</a> <span class="required-field-message">Required fields are marked <span class="required">*</span></span></p>', 'woocommerce'),
         $user_name,
         $profile_url,
         $logout_url
