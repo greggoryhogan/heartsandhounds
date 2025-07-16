@@ -352,10 +352,11 @@ function list_user_boxes() {
                     if(!empty($shelter_output)) {
                         
                             echo implode('',$shelter_output);
-                            if($total_shelter_visits > 0) {
-                                echo '<div class="mt-1">You&rsquo;re making a difference, great job!</div>';
-                            }
+                            
                         
+                    }
+                    if($total_shelter_visits > 0 || $views > 0) {
+                        echo '<div class="mt-1">You&rsquo;re making a difference, great job!</div>';
                     }
                 echo '</div>';
             echo '</div>';
