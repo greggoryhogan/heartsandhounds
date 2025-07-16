@@ -1062,3 +1062,4 @@ function hh_custom_comment_logged_in_message( $logged_in_as, $commenter ) {
 }
 
 add_filter('woocommerce_disable_password_change_notification', '__return_true');
+remove_action( 'after_password_reset', 'wp_password_change_notification' );
