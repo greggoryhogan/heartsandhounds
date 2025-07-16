@@ -1002,7 +1002,7 @@ function trigger_reward($post_id, $award_type, $award_count, $extra_details = ar
                     if($award_count == 1) {
                         $subject = 'You just sent your first visitor to a shelter!';
                         if(isset($extra_details['shelter'])) {
-                            $message = '<p>Someone just clicked off your treat box page to learn more about &ldquo;'.$extra_details['shelter'].'&rdquo;, great job!</p>';
+                            $message = '<p>Someone just clicked off your treat box page to learn more about &ldquo;'.$extra_details['shelter'].'&rdquo;—great job!</p>';
                         } else {
                             $message = '<p>Someone just clicked off your treat box page to learn more about one of your shelters, great job!</p>';
                         }
