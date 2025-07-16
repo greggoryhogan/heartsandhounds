@@ -60,7 +60,7 @@ $store_name                 = $store_name ?? get_bloginfo( 'name', 'display' );
 												<td id="template_header_image">
 													<?php
 													if ( $img ) {
-														echo '<p style="margin-top:0;"><a href="https://heartsandhounds.org/" title="Hearts & Hounds"><img src="' . esc_url( $img ) . '" alt="' . esc_attr( $store_name ) . '" /></a></p>';
+														echo '<p style="margin-top:0;"><a href="https://heartsandhounds.org/" title="Hearts and Hounds"><img src="' . esc_url( $img ) . '" alt="' . esc_attr( $store_name ) . '" /></a></p>';
 													} else {
 														echo '<p class="email-logo-text">' . esc_html( $store_name ) . '</p>';
 													}
