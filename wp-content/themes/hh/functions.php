@@ -436,6 +436,8 @@ function hh_remove_woocommerce_assets() {
 
         // WooCommerce Blocks styles
         wp_dequeue_style( 'wc-blocks-style' );
+		wp_dequeue_style( 'wc-block-style' );
+		wp_dequeue_style( 'brands-styles' );
         wp_dequeue_style( 'wc-blocks-vendors-style' );
         wp_dequeue_style( 'wc-blocks-checkout-style' );
         wp_dequeue_style( 'wc-blocks-cart-style' );
