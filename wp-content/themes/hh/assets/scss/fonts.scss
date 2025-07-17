@@ -6,7 +6,10 @@
     src: url('../fonts/TargetBookRegular.ttf') format('truetype'); 
   }*/
   @font-face {
-    font-family: "TargetBook W00 Regular";
+    font-family: 'TargetBook';
+    font-display: swap;
+    font-style: normal;
+    font-weight: 400;
     src: url("../fonts/96c957366184eab6f1bcf1209e4b8403.eot");
     src: url("../fonts/96c957366184eab6f1bcf1209e4b8403.eot?#iefix")format("embedded-opentype"),
     url("../fonts/96c957366184eab6f1bcf1209e4b8403.woff2")format("woff2"),
