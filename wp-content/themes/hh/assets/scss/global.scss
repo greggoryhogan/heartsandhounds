@@ -243,13 +243,13 @@ input[type="submit"],
     color: transparent;
     position: relative;
     &.page-visits {
-      background-image: url('../img/icons/award-visits.png');
+      background-image: url('../img/icons/min/award-visits.png');
     }
     &.shelter-visits {
-      background-image: url('../img/icons/award-shelter.png');
+      background-image: url('../img/icons/min/award-shelter.png');
     }
     &.comments {
-      background-image: url('../img/icons/award-comments.png');
+      background-image: url('../img/icons/min/award-comments.png');
     }
     &:after {
       content: attr(data-count);
