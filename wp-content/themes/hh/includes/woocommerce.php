@@ -1037,6 +1037,9 @@ function trigger_reward($post_id, $award_type, $award_count, $extra_details = ar
 
         send_woo_email( $to, $subject, $message );
     }
+
+    //attempt to clear cache
+    wp_engine_manual_cache_flush();
 }
 
 function send_woo_email( $to, $subject, $message, $headers = "Content-Type: text/html\r\n", $attachments = "" ) {
