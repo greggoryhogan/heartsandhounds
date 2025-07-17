@@ -41,7 +41,7 @@ if ( have_posts() ) {
 							$awards = array();
 						}				
 						if(!empty($awards)) {
-							echo '<div class="d-flex flex-wrap treatbox-page-awards mt-4 gap-2">';
+							echo '<div class="d-flex flex-wrap treatbox-page-awards mt-sm-3 mt-3 mb-1 gap-2">';
 								//foreach($awards as $award) {
 								$counts = array(500, 100, 50, 25, 10, 1);
 								foreach($counts as $count) {
@@ -63,6 +63,7 @@ if ( have_posts() ) {
 										break;
 									}
 								}
+								//echo '<div class="tooltip" id="tooltip"></div>';
 							echo '</div>';
 						}
 					echo '</div>';	

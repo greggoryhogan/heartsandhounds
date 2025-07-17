@@ -213,6 +213,7 @@ input[type="submit"],
 }
 .tooltip {
     position: absolute;
+    //flex: 1;
     color: #fff;
     background: $dark-brown;
     padding: 5px 10px;
