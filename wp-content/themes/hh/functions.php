@@ -57,6 +57,17 @@ function hh_early_head_customization() {
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 	<meta name="apple-mobile-web-app-title" content="hh Repeating Arms">
 	<meta name="theme-color" content="#191102" />
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-JBQLB3JCCK"></script>
+	<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+
+	gtag('config', 'G-JBQLB3JCCK');
+	</script>
+
 	<?php 
 }
 
