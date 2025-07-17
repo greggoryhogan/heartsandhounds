@@ -1,7 +1,16 @@
-@font-face {
+/*@font-face {
     font-display: swap;
     font-family: 'TargetBook';
     font-style: normal;
     font-weight: 400;
-    src: url('../fonts/TargetBookRegular.ttf') format('truetype'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-  }
+    src: url('../fonts/TargetBookRegular.ttf') format('truetype'); 
+  }*/
+  @font-face {
+    font-family: "TargetBook W00 Regular";
+    src: url("../fonts/96c957366184eab6f1bcf1209e4b8403.eot");
+    src: url("../fonts/96c957366184eab6f1bcf1209e4b8403.eot?#iefix")format("embedded-opentype"),
+    url("../fonts/96c957366184eab6f1bcf1209e4b8403.woff2")format("woff2"),
+    url("../fonts/96c957366184eab6f1bcf1209e4b8403.woff")format("woff"),
+    url("../fonts/96c957366184eab6f1bcf1209e4b8403.ttf")format("truetype"),
+    url("../fonts/96c957366184eab6f1bcf1209e4b8403.svg#TargetBook W00 Regular")format("svg");
+}
