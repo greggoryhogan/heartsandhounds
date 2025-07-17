@@ -425,3 +425,36 @@ function custom_modify_document_title_parts( $title ) {
     }
     return $title;
 }*/
+
+function hh_remove_woocommerce_assets() {
+    if ( is_front_page() || ( is_single() && get_post_type() === 'post' ) ) {
+        // WooCommerce core styles
+        wp_dequeue_style( 'woocommerce-general' );
+        wp_dequeue_style( 'woocommerce-layout' );
+        wp_dequeue_style( 'woocommerce-smallscreen' );
+        wp_dequeue_style( 'woocommerce-inline' );
+
+        // WooCommerce Blocks styles
+        wp_dequeue_style( 'wc-blocks-style' );
+        wp_dequeue_style( 'wc-blocks-vendors-style' );
+        wp_dequeue_style( 'wc-blocks-checkout-style' );
+        wp_dequeue_style( 'wc-blocks-cart-style' );
+
+        // WooCommerce scripts
+        wp_dequeue_script( 'wc-add-to-cart' );
+        wp_dequeue_script( 'woocommerce' );
+        wp_dequeue_script( 'wc-cart-fragments' );
+        wp_dequeue_script( 'wc-blocks' );
+        wp_dequeue_script( 'wc-blocks-vendors' );
+
+        // Stripe scripts
+        wp_dequeue_script( 'stripe' );
+        wp_dequeue_script( 'wc-stripe' );
+        wp_dequeue_script( 'wc-stripe-payment-request' );
+        wp_dequeue_script( 'wc-stripe-handle-save-payment-method' );
+        wp_dequeue_script( 'wc-credit-card-form' );
+        wp_dequeue_style( 'wc-stripe-styles' );
+    }
+}
+add_action( 'wp_enqueue_scripts', 'hh_remove_woocommerce_assets', 100 );
+add_action( 'enqueue_block_assets', 'hh_remove_woocommerce_assets', 100 );
