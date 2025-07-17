@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-md-2 offset-md-5 col-4 offset-4 mb-sm-3 mb-2">
                 <a href="/" title="Home" class="logo" title="Visit Hearts & Hounds homepage">
-                    <img src="<?php echo THEME_URI; ?>/assets/img/logo-circle.png" alt="Hearts & Hounds logo" class="d-block" />
+                    <img src="<?php echo THEME_URI; ?>/assets/img/logo-circle.png" alt="Hearts & Hounds logo" class="d-block" loading="lazy" />
                 </a>
             </div>
             <div class="col-md-12 col-12">
