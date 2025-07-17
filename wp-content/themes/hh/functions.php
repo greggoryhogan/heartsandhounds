@@ -15,7 +15,7 @@ function register_hh_scripts() {
 	$hh_dir = HH_URL.'/wp-content/themes/hh';
 	//Main Stylesheet
 	wp_enqueue_style( 'hh-main', $hh_dir.'/assets/css/main.css', false, $version, 'all' );
-	wp_enqueue_script( 'hh-main', $hh_dir.'/assets/js/main.js', array('jquery'), $version, true);
+	wp_enqueue_script( 'hh-main', $hh_dir.'/assets/js/main.js', array('jquery','wp-hooks'), $version, true);
 	wp_localize_script( 'hh-main', 'hh_main', array(
 		'ajax_url' => admin_url( 'admin-ajax.php' ),
 		'current_user_id' => get_current_user_id(),
@@ -436,7 +436,6 @@ function hh_remove_woocommerce_assets() {
 
         // WooCommerce Blocks styles
         wp_dequeue_style( 'wc-blocks-style' );
-		wp_dequeue_style( 'wc-block-style' );
 		wp_dequeue_style( 'brands-styles' );
         wp_dequeue_style( 'wc-blocks-vendors-style' );
         wp_dequeue_style( 'wc-blocks-checkout-style' );
