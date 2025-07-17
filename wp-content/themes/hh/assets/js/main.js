@@ -54,6 +54,56 @@
         });
     });
 
+    const $tooltip = $('<div class="tooltip"></div>').appendTo('body');
+  let isTouch = false;
+
+  function showTooltip($el, pageX, pageY) {
+    const text = $el.data('tooltip');
+    $tooltip.text(text).fadeIn(150).css({
+      top: pageY + 10,
+      left: pageX + 10
+    });
+  }
+
+  function hideTooltip() {
+    $tooltip.hide();
+  }
+
+  // Desktop hover
+  $('.award').on('mouseenter', function(e) {
+    if (isTouch) return;
+    showTooltip($(this), e.pageX, e.pageY);
+  }).on('mousemove', function(e) {
+    if (isTouch) return;
+    $tooltip.css({
+      top: e.pageY + 10,
+      left: e.pageX + 10
+    });
+  }).on('mouseleave', function() {
+    if (isTouch) return;
+    hideTooltip();
+  });
+
+  // Mobile tap
+  $('.award').on('touchstart click', function(e) {
+    isTouch = true;
+    const $el = $(this);
+    const offset = $el.offset();
+
+    showTooltip($el, offset.left + $el.outerWidth() / 2, offset.top + $el.outerHeight());
+
+    // Hide after 2 seconds or if tapped again
+    setTimeout(hideTooltip, 2000);
+    e.stopPropagation(); // Prevent event from bubbling
+  });
+
+  // Tap anywhere else to close
+  $(document).on('touchstart click', function(e) {
+    if (!$(e.target).closest('.award').length) {
+      hideTooltip();
+    }
+  });
+
     //get current user id
     //hh_main.current_user_id
 

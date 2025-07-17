@@ -41,57 +41,25 @@ if ( have_posts() ) {
 							$awards = array();
 						}				
 						if(!empty($awards)) {
-							echo '<div class="d-flex flex-wrap treatbox-page-awards mt-4">';
+							echo '<div class="d-flex flex-wrap treatbox-page-awards mt-4 gap-2">';
 								//foreach($awards as $award) {
 								$counts = array(500, 100, 50, 25, 10, 1);
 								foreach($counts as $count) {
 									if(isset($awards[$count.'_page_visits'])) {
-										echo '<div class="d-flex align-items-center text-center award-container w-100">';
-											echo '<div class="award brown"></div>';
-											if($count == 1) {
-												echo '<div class="award-text brown"><span class="count">'.$count.'+</span> Treat Box Visit</div>';
-											} else {
-												echo '<div class="award-text brown"><span class="count">'.$count.'+</span> Treat Box Visits</div>';
-											}
-											/*if(absint($awards[$count.'_page_visits']) > 1) {
-												echo '<div class="award-count"> <span class="x">x</span> '.$awards[$count.'_page_visits'].'</div>';
-											}*/
-											
-										echo '</div>';
+										echo '<div class="award award-count-'.$count.' page-visits" data-count="'.$count.'+" data-tooltip="'.$count.'+ Treat Box Visits"></div>';
 										break;
 									}
 								}
 								foreach($counts as $count) {
 									if(isset($awards[$count.'_comments'])) {
-										echo '<div class="d-flex align-items-center text-center award-container w-100">';
-											echo '<div class="award tan"></div>';
-											if($count == 1) {
-												echo '<div class="award-text tan"><span class="count">'.$count.'+</span> Comment</div>';
-											} else {
-												echo '<div class="award-text tan"><span class="count">'.$count.'+</span> Comments</div>';
-											}
-											/*if(absint($awards[$count.'_shelter_visits']) > 1) {
-												echo '<div class="award-count"> <span class="x">x</span> '.$awards[$count.'_shelter_visits'].'</div>';
-											}*/
-											
-										echo '</div>';
+									//if(isset($awards[$count.'_page_visits'])) {
+										echo '<div class="award award-count-'.$count.' comments" data-count="'.$count.'+" data-tooltip="'.$count.'+ Tail Wags"></div>';
 										break;
 									}
 								}
 								foreach($counts as $count) {
 									if(isset($awards[$count.'_shelter_visits'])) {
-										echo '<div class="d-flex align-items-center text-center award-container w-100">';
-											echo '<div class="award red"></div>';
-											if($count == 1) {
-												echo '<div class="award-text red"><span class="count">'.$count.'+</span> Shelter Visit</div>';
-											} else {
-												echo '<div class="award-text red"><span class="count">'.$count.'+</span> Shelter Visits</div>';
-											}
-											/*if(absint($awards[$count.'_shelter_visits']) > 1) {
-												echo '<div class="award-count"> <span class="x">x</span> '.$awards[$count.'_shelter_visits'].'</div>';
-											}*/
-											
-										echo '</div>';
+										echo '<div class="award award-count-'.$count.' shelter-visits" data-count="'.$count.'+" data-tooltip="'.$count.'+ Shelter Visits"></div>';
 										break;
 									}
 								}
