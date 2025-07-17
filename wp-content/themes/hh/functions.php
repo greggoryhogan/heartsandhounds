@@ -417,11 +417,11 @@ add_filter('template_redirect',function() {
 	
 });
 
-//Add box to post title
-add_filter( 'document_title_parts', 'custom_modify_document_title_parts' );
+//Add box to post title - Now handled through rankmath
+/*add_filter( 'document_title_parts', 'custom_modify_document_title_parts' );
 function custom_modify_document_title_parts( $title ) {
     if ( is_singular( 'post' ) ) {
         $title['title'] = $title['title'] ."'s Box";
     }
     return $title;
-}
+}*/
