@@ -265,8 +265,14 @@ body {
 
 
 .treat-text {
-  font-size: 7vw;
-  line-height: 6vw;
+  @media (min-width: 1440px) {
+    font-size: 101px;
+    line-height: 87px;
+  }
+  @media (max-width: 1440px) and (min-width: 768px){
+    font-size: 7vw;
+    line-height: 6vw;
+  }
   @media (max-width: 768px) {
     font-size: 60px;
     line-height: 55px;
