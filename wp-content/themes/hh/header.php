@@ -12,7 +12,7 @@
                 <?php hh_wp_nav_menu('menu-left', 2, 'justify-content-end menu-left'); ?>
             </div>
             <div class="col-lg-2 col-3">
-                <a href="/" title="Home" class="logo" title="Visit Hearts & Hounds homepage">
+                <a href="/" class="logo" title="Visit Hearts & Hounds homepage">
                     <img src="<?php echo THEME_URI; ?>/assets/img/logo-circle.png" alt="Hearts & Hounds logo"/>
                 </a>
             </div>
