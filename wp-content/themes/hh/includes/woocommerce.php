@@ -703,42 +703,53 @@ function update_link_count() {
         $link_counts[$link] += 1;
         update_post_meta($post_id,'treatbox_link_counts',$link_counts);
 
+        //get total counts for awards
+        $total_visits = 0;
+        foreach($link_counts as $link => $count) {
+            $total_visits += $count;
+        }
         //awards
         $awards = maybe_unserialize(get_post_meta($post_id,'treatbox_awards',true));
         if(!is_array($awards)) {
             $awards = array();
         }
 
-        if($link_counts[$link] == 1) {
+        if($total_visits == 1) {
             if(!isset($awards['1_shelter_visits'])) {
                 $awards['1_shelter_visits'] = 0;
             }
             $awards['1_shelter_visits'] += 1;
             trigger_reward($post_id, 'shelter_visits', 1, array('shelter' => $shelter));
-        } else if($link_counts[$link] == 10) {
+        } else if($total_visits == 10) {
             if(!isset($awards['10_shelter_visits'])) {
                 $awards['10_shelter_visits'] = 0;
             }
             $awards['10_shelter_visits'] += 1;
             trigger_reward($post_id, 'shelter_visits', 10, array('shelter' => $shelter));
-        } else if($link_counts[$link] == 25) {
+        } else if($total_visits == 25) {
             if(!isset($awards['25_shelter_visits'])) {
                 $awards['25_shelter_visits'] = 0;
             }
             $awards['25_shelter_visits'] += 1;
             trigger_reward($post_id, 'shelter_visits', 25, array('shelter' => $shelter));
-        } else if($link_counts[$link] == 50) {
+        } else if($total_visits == 50) {
             if(!isset($awards['50_shelter_visits'])) {
                 $awards['50_shelter_visits'] = 0;
             }
             $awards['50_shelter_visits'] += 1;
             trigger_reward($post_id, 'shelter_visits', 50, array('shelter' => $shelter));
-        } else if($link_counts[$link] == 100) {
+        } else if($total_visits == 100) {
             if(!isset($awards['100_shelter_visits'])) {
                 $awards['100_shelter_visits'] = 0;
             }
             $awards['100_shelter_visits'] += 1;
             trigger_reward($post_id, 'shelter_visits', 100, array('shelter' => $shelter));
+        } else if($total_visits == 500) {
+            if(!isset($awards['500_shelter_visits'])) {
+                $awards['500_shelter_visits'] = 0;
+            }
+            $awards['500_shelter_visits'] += 1;
+            trigger_reward($post_id, 'shelter_visits', 500, array('shelter' => $shelter));
         }
         update_post_meta($post_id,'treatbox_awards',$awards);
     }
