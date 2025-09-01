@@ -459,3 +459,18 @@ function hh_remove_woocommerce_assets() {
 }
 add_action( 'wp_enqueue_scripts', 'hh_remove_woocommerce_assets', 100 );
 add_action( 'enqueue_block_assets', 'hh_remove_woocommerce_assets', 100 );
+
+add_filter('registration_errors','hounds_no_ru_domains', 10, 3);
+function hounds_no_ru_domains($errors, $login, $email) {
+	$domains = ["n8ncreator.ru"];
+
+	// Extract domain from email
+	$domain = substr(strrchr($email, "@"), 1);
+
+	// Check if the domain is in the array
+	if (!in_array($domain, $domains)) {
+		$errors->add( 'domain_error', __( '<strong>ERROR</strong>: There was an error registering your account.', 'hh' ) );
+    	return $errors;
+	}
+	return $errors;
+}
