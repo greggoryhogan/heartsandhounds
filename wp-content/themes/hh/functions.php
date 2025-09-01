@@ -460,17 +460,42 @@ function hh_remove_woocommerce_assets() {
 add_action( 'wp_enqueue_scripts', 'hh_remove_woocommerce_assets', 100 );
 add_action( 'enqueue_block_assets', 'hh_remove_woocommerce_assets', 100 );
 
-add_filter('registration_errors','hounds_no_ru_domains', 10, 3);
-function hounds_no_ru_domains($errors, $login, $email) {
-	$domains = ["n8ncreator.ru"];
+// 1) My Account registration
+add_filter('woocommerce_registration_errors', 'hh_block_email_domains', 10, 3);
 
-	// Extract domain from email
-	$domain = substr(strrchr($email, "@"), 1);
+// 2) Checkout "create account" flow
+add_filter('woocommerce_process_registration_errors', 'hh_block_email_domains_checkout', 10, 4);
 
-	// Check if the domain is in the array
-	if (!in_array($domain, $domains)) {
-		$errors->add( 'domain_error', __( '<strong>ERROR</strong>: There was an error registering your account.', 'hh' ) );
-    	return $errors;
-	}
-	return $errors;
+function hh_block_email_domains( $errors, $username, $email ) {
+    if ( empty($email) || is_wp_error($errors) && $errors->has_errors() ) {
+        return $errors;
+    }
+
+    $blocked_domains = ['n8ncreator.ru']; // exact domains
+    $email = trim($email);
+    $domain = strtolower( substr(strrchr($email, '@'), 1) );
+
+    // Exact domain block
+    if ( $domain && in_array($domain, $blocked_domains, true) ) {
+        $errors->add(
+            'domain_error',
+            __('There was an error registering your account.', 'hh')
+        );
+        return $errors;
+    }
+
+    // OPTIONAL: block entire TLD like .ru (uncomment if you want this)
+    // if ( $domain && preg_match('/\.ru$/i', $domain) ) {
+    //     $errors->add(
+    //         'tld_error',
+    //         __('Sorry, .ru email addresses are not allowed.', 'hh')
+    //     );
+    // }
+
+    return $errors;
+}
+
+function hh_block_email_domains_checkout( $errors, $username, $password, $email ) {
+    // Reuse the same logic for checkout flow
+    return hh_block_email_domains( $errors, $username, $email );
 }
